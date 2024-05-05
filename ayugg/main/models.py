@@ -1,8 +1,25 @@
 from django.db import models
 
-class ChampionBasicInfo(models.Model):
-    champion_name = models.CharField(max_length=50)
+class Version(models.Model):
+    version = models.CharField(max_length=10)
+    
+    def __str__(self):
+        return self.version
+
+class Champion(models.Model):
+    version = models.ForeignKey(Version, on_delete=models.CASCADE)
+    champion_key = models.CharField(max_length=5)
+    champion_name = models.CharField(max_length=20)
     champion_img = models.TextField()
+    
+    def __str__(self):
+        return self.champion
+
+class ChampionBasicInfo(models.Model):
+    version = models.ForeignKey(Version, on_delete=models.CASCADE)
+    champion_key = models.ForeignKey(Champion, on_delete=models.CASCADE, related_name = 'basic_info_champion_key')
+    champion_name = models.ForeignKey(Champion, on_delete=models.CASCADE, related_name = 'basic_info_champion_name')
+    champion_img = models.ForeignKey(Champion, on_delete=models.CASCADE, related_name = 'basic_info_champion_img')
     champion_passive_name = models.CharField(max_length=25)
     champion_passive_img = models.TextField()
     champion_passive_info = models.TextField()
