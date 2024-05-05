@@ -1,6 +1,13 @@
 from django.db import models
 
+class Version(models.Model):
+    version = models.CharField(max_length=10)
+    
+    def __str__(self):
+        return self.version
+
 class ChampionBasicInfo(models.Model):
+    version = models.ForeignKey(Version, on_delete=models.CASCADE, related_name = "basic_info_version")
     champion_name = models.CharField(max_length=50)
     champion_img = models.TextField()
     champion_passive_name = models.CharField(max_length=25)
