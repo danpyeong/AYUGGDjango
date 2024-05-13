@@ -2,6 +2,7 @@
 
 # dependencies
 /ayuggserver
+/ayugg/db.sqlite3
 
 # testing
 # /coverage
