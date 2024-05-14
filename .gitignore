@@ -2,7 +2,6 @@
 
 # dependencies
 /ayuggserver
-/ayugg/db.sqlite3
 
 **/__pycache__
 
