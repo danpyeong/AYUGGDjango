@@ -13,7 +13,7 @@ class Champion(models.Model):
     champion_img = models.TextField()
     
     def __str__(self):
-        return self.champion
+        return self.champion_name
 
 class ChampionBasicInfo(models.Model):
     version = models.ForeignKey(Version, on_delete=models.CASCADE, related_name = 'basic_info_version')

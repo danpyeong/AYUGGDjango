@@ -64,24 +64,42 @@ def get_champion_info_data():
         rawdata = rawdata['data']
         data = rawdata[champ_eng_name_list[index]]
         
-        key = data['key']
-        kr_name = data['name']
-        # img_full = img['full']
+        print(Champion.objects.all())
+        
+        # key = Champion.objects.filter('champion_key')
+        # kr_name = Champion.objects.filter('champion_name')
+        # img = data['image']
+        # img = Champion.objects.filter('champion_img')
         
         passive = data['passive']
         p_name = passive['name']
         p_info = passive['description']
-        # p_img = passive['img']
-        # p_img = p_img['full']
+        p_img = passive['image']
+        p_img = p_img['full']
          
         spells = data['spells']
         
+        spell_name = []
+        spell_info = []
+        spell_img = []
         
-        print(data)
+        for spell in spells:
+            spell_name.append(spell['id'])
+            # spell_info.append(spell['description'])
+            # img = spell['image']
+            # img = img['full']
+            # spell_img.append(img)
         
         # ChampionBasicInfo.objects.get_or_create(
-        #     version = now_ver, champion_key = key, champion_name = kr_name, champion_img = img_full,
-        #     champion_passive_name = )
+        #     version = now_ver, champion_key = key, champion_name = kr_name, champion_img = img,
+        #     champion_passive_name = p_name, champion_passive_info = p_info, champion_passive_img = p_img,
+        #     champion_q_name = spell_name[0], champion_q_info = spell_info[0], champion_q_img = spell_img[0],
+        #     champion_w_name = spell_name[1], champion_w_info = spell_info[1], champion_w_img = spell_img[1],
+        #     champion_e_name = spell_name[2], champion_e_info = spell_info[2], champion_e_img = spell_img[2],
+        #     champion_r_name = spell_name[3], champion_r_info = spell_info[3], champion_r_img = spell_img[3],
+        #     )
+        
+        print("Basic Data End :" + index)
         
         # print(data)
         if index == 0:
