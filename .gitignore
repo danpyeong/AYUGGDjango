@@ -4,6 +4,8 @@
 /ayuggserver
 /ayugg/db.sqlite3
 
+**/__pycache__
+
 # testing
 # /coverage
 
