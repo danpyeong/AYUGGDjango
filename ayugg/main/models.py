@@ -40,7 +40,7 @@ class ChampionBasicInfo(models.Model):
         return self.champion_name
     
 class MatchData(models.Model):
-    match_id = models.CharField(max_length=30, primary_key=True)
+    match_id = models.CharField(max_length=30)
     
     def __str__(self):
-        return self.champion_name
+        return self.match_id
