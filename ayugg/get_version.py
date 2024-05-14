@@ -87,4 +87,4 @@ def get_champion_info_data():
         if index == 0:
             break
         
-get_champion_info_data()    
+get_champion_info_data()
