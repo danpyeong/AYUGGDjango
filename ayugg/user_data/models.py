@@ -4,7 +4,7 @@ class userModel(models.Model):
     gameName = models.CharField(max_length=16)
     tagLine = models.CharField(max_length=5, default='KR1')
     puuid = models.CharField(max_length=78)
-    summonerId = models.CharField(max_length=63)
+    id = models.CharField(max_length=63, primary_key=True)
     profileIconId = models.IntegerField()
     summonerLevel = models.CharField(max_length=50)
     rank = models.CharField(max_length=50, default='NONE')

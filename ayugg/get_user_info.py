@@ -1,6 +1,5 @@
-from main.models import MatchData
+from user_data.models import userModel
 import requests
-import time
 
 # python manage.py shell
 # exec(open("get_user_info.py", encoding="utf-8").read())
@@ -13,9 +12,8 @@ request_headers = {
 # api수정
 api_key = "api_key=RGAPI-d7f2268a-7c6a-4551-b4bd-092cb9d35f94"
 
-# common_url = "https://kr.api.riotgames.com/lol/"
 # 변수 수정해야됨
-riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/Hide%20on%20bush/KR1"
+riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/NekoL/0214"
 encrypted_puuid_url = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/"
 id_url = "https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/"
 matches_url = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/"
@@ -42,17 +40,20 @@ class search_data():
     
     result_data = {}
 
-    result_data = get_data(riot_id_url + "?" + api_key)
+    riot_id_data = get_data(riot_id_url + "?" + api_key)
+    result_data['puuid'] = riot_id_data['puuid']
+    result_data['gameName'] = riot_id_data['gameName']
+    result_data['tagLine'] = riot_id_data['tagLine']
 
     puuid_data = get_data(encrypted_puuid_url + result_data['puuid'] + "?" + api_key)
     result_data['profileIconId'] = puuid_data['profileIconId']
-    result_data['summonerId'] = puuid_data['id']
+    result_data['id'] = puuid_data['id']
     result_data['summonerLevel'] = puuid_data['summonerLevel']
 
-    id_data = get_data(id_url + result_data['summonerId'] + "?" + api_key)
+    id_data = get_data(id_url + result_data['id'] + "?" + api_key)
     result_data['rank'] = id_data[0]['rank']
     result_data['tier'] = id_data[0]['tier']
-    result_data['leaguePoints'] = id_data[0]['rank']
+    result_data['leaguePoints'] = id_data[0]['leaguePoints']
     result_data['wins'] = id_data[0]['wins']
     result_data['losses'] = id_data[0]['losses']
     
@@ -64,11 +65,29 @@ class search_data():
     for m in range(match_num):
         result_data['matches'].append(get_data(matchDataUrl + result_data['matchList'][m] + "?" + api_key))
 
+    # print(riot_id_url + "?" + api_key)
+    # print(puuid_data)
+    # print(result_data)
 
-    # print(match_id_data)
-    print(result_data['matches'])
+    def save_user_data(result_data):
+        user = userModel(
+            puuid=result_data['puuid'],
+            gameName=result_data['gameName'],
+            tagLine=result_data['tagLine'],
+            profileIconId=result_data['profileIconId'],
+            id=result_data['id'],
+            summonerLevel=result_data['summonerLevel'],
+            rank=result_data['rank'],
+            tier=result_data['tier'],
+            leaguePoints=result_data['leaguePoints'],
+            wins=result_data['wins'],
+            losses=result_data['losses'],
+            matchList=result_data['matchList'],
+            matches=result_data['matches']
+        )
+        user.save()
 
-    # print(get_data((encrypted_puuid_url + result_data['puuid'] + api_key)))
+    save_user_data(result_data)
 
 # def get():
 #     for i in range(10):
