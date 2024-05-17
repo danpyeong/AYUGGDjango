@@ -1,6 +1,7 @@
 from user_data.models import userModel
 import requests
 
+# cd AYUGGDjango/ayugg
 # python manage.py shell
 # exec(open("get_user_info.py", encoding="utf-8").read())
 
@@ -12,8 +13,9 @@ request_headers = {
 # api수정
 api_key = "api_key=RGAPI-d7f2268a-7c6a-4551-b4bd-092cb9d35f94"
 
-# 변수 수정해야됨
-riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/NekoL/0214"
+# hide on bush/KR1 league data(id값입력) [] 반환됨
+# riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/NekoL/0214"
+riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/의심하지말고해/KR1"
 encrypted_puuid_url = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/"
 id_url = "https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/"
 matches_url = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/"
@@ -38,36 +40,38 @@ def get_data(url):
 
 class search_data():
     
-    result_data = {}
+    def get():
+        result_data = {}
 
-    riot_id_data = get_data(riot_id_url + "?" + api_key)
-    result_data['puuid'] = riot_id_data['puuid']
-    result_data['gameName'] = riot_id_data['gameName']
-    result_data['tagLine'] = riot_id_data['tagLine']
+        riot_id_data = get_data(riot_id_url + "?" + api_key)
+        result_data['puuid'] = riot_id_data['puuid']
+        result_data['gameName'] = riot_id_data['gameName']
+        result_data['tagLine'] = riot_id_data['tagLine']
 
-    puuid_data = get_data(encrypted_puuid_url + result_data['puuid'] + "?" + api_key)
-    result_data['profileIconId'] = puuid_data['profileIconId']
-    result_data['id'] = puuid_data['id']
-    result_data['summonerLevel'] = puuid_data['summonerLevel']
+        puuid_data = get_data(encrypted_puuid_url + result_data['puuid'] + "?" + api_key)
+        result_data['profileIconId'] = puuid_data['profileIconId']
+        result_data['id'] = puuid_data['id']
+        result_data['summonerLevel'] = puuid_data['summonerLevel']
 
-    id_data = get_data(id_url + result_data['id'] + "?" + api_key)
-    result_data['rank'] = id_data[0]['rank']
-    result_data['tier'] = id_data[0]['tier']
-    result_data['leaguePoints'] = id_data[0]['leaguePoints']
-    result_data['wins'] = id_data[0]['wins']
-    result_data['losses'] = id_data[0]['losses']
-    
-    match_id_data = get_data(matches_url + result_data['puuid'] + "/ids?count=20&" + api_key)
-    result_data['matchList'] = match_id_data
-    
-    match_num = 2
-    result_data['matches'] = []
-    for m in range(match_num):
-        result_data['matches'].append(get_data(matchDataUrl + result_data['matchList'][m] + "?" + api_key))
+        id_data = get_data(id_url + result_data['id'] + "?" + api_key)
+        result_data['rank'] = id_data[0]['rank']
+        result_data['tier'] = id_data[0]['tier']
+        result_data['leaguePoints'] = id_data[0]['leaguePoints']
+        result_data['wins'] = id_data[0]['wins']
+        result_data['losses'] = id_data[0]['losses']
+        
+        match_id_data = get_data(matches_url + result_data['puuid'] + "/ids?count=20&" + api_key)
+        result_data['matchList'] = match_id_data
+        
+        match_num = 2
+        result_data['matches'] = []
+        for m in range(match_num):
+            result_data['matches'].append(get_data(matchDataUrl + result_data['matchList'][m] + "?" + api_key))
 
-    # print(riot_id_url + "?" + api_key)
-    # print(puuid_data)
-    # print(result_data)
+        return(result_data)
+        # print(riot_id_url + "?" + api_key)
+        # print(puuid_data)
+        # print(result_data)
 
     def save_user_data(result_data):
         user = userModel(
@@ -87,7 +91,8 @@ class search_data():
         )
         user.save()
 
-    save_user_data(result_data)
+    data = get()
+    save_user_data(data)
 
 # def get():
 #     for i in range(10):
