@@ -17,6 +17,8 @@ class userModel(models.Model):
     matchList = models.JSONField()
     # 입력시 [{},{}]
     matches = models.JSONField()
+    #입력시 [] 
+    matchNum = models.JSONField()
 
 
     def __str__(self):

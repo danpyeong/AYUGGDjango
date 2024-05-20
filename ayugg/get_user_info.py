@@ -14,8 +14,8 @@ request_headers = {
 api_key = "api_key=RGAPI-d7f2268a-7c6a-4551-b4bd-092cb9d35f94"
 
 # hide on bush/KR1 league data(id값입력) [] 반환됨
-# riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/NekoL/0214"
-riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/의심하지말고해/KR1"
+riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/NekoL/0214"
+# riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/의심하지말고해/KR1"
 encrypted_puuid_url = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/"
 id_url = "https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/"
 matches_url = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/"
@@ -65,13 +65,19 @@ class search_data():
         
         match_num = 2
         result_data['matches'] = []
+        result_data['matchNum'] = []
         for m in range(match_num):
             result_data['matches'].append(get_data(matchDataUrl + result_data['matchList'][m] + "?" + api_key))
+            
+            for i in range(10):
+                    if result_data['id'] == result_data['matches'][0]['info']['participants'][i]['summonerId']:
+                        result_data['matchNum'].append(i)
+                    
 
-        return(result_data)
         # print(riot_id_url + "?" + api_key)
         # print(puuid_data)
-        # print(result_data)
+        # print(result_data['matchNum'])
+        return(result_data)
 
     def save_user_data(result_data):
         user = userModel(
@@ -87,7 +93,8 @@ class search_data():
             wins=result_data['wins'],
             losses=result_data['losses'],
             matchList=result_data['matchList'],
-            matches=result_data['matches']
+            matches=result_data['matches'],
+            matchNum=result_data['matchNum']
         )
         user.save()
 
