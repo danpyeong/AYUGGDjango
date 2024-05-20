@@ -11,7 +11,9 @@ request_headers = {
     "Origin": "https://developer.riotgames.com"
 }
 # api수정
-api_key = "api_key=RGAPI-d7f2268a-7c6a-4551-b4bd-092cb9d35f94"
+# api_key = "api_key=RGAPI-d7f2268a-7c6a-4551-b4bd-092cb9d35f94"
+
+api_key = 'api_key=RGAPI-8a273e3c-4974-4b30-9e39-11b6aa832270'
 
 # hide on bush/KR1 league data(id값입력) [] 반환됨
 riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/NekoL/0214"
@@ -67,16 +69,28 @@ class search_data():
         result_data['matches'] = []
         result_data['matchNum'] = []
         for m in range(match_num):
-            result_data['matches'].append(get_data(matchDataUrl + result_data['matchList'][m] + "?" + api_key))
+            match_data = get_data(matchDataUrl + result_data['matchList'][m] + "?" + api_key)
+            tier_list = []
+
+            for j in range(10):                 
+                tier_data = get_data(id_url + match_data['info']['participants'][j]['summonerId'] + "?" + api_key)
+                if 'tier' in tier_data[0]:
+                    tier_list.append(tier_data[0]['tier'] +" "+ tier_data[0]['rank'])
+                else:
+                    tier_list.append('UNRANK')
+            
+            match_data['tierList'] = tier_list
+            result_data['matches'].append(match_data)
+            
             
             for i in range(10):
-                    if result_data['id'] == result_data['matches'][0]['info']['participants'][i]['summonerId']:
+                    if result_data['id'] == result_data['matches'][m]['info']['participants'][i]['summonerId']:
                         result_data['matchNum'].append(i)
                     
 
         # print(riot_id_url + "?" + api_key)
         # print(puuid_data)
-        # print(result_data['matchNum'])
+        print(result_data['matches'][0]['info']['queueId'])
         return(result_data)
 
     def save_user_data(result_data):
@@ -100,6 +114,28 @@ class search_data():
 
     data = get()
     save_user_data(data)
+
+    # more 버튼 이후
+    def moreMatch(data):
+        match_num = 2
+        match_start = len(data['matches'])
+        for m in range(match_num):
+            print(m+match_start)
+            data['matches'].append(get_data(matchDataUrl + data['matchList'][m+match_start] + "?" + api_key))
+            
+            for i in range(10):
+                    if data['id'] == data['matches'][0]['info']['participants'][i]['summonerId']:
+                        data['matchNum'].append(i)
+                        print(data['matchNum'])
+
+        return data
+
+    
+    # data = moreMatch(data)
+    # save_user_data(data)
+
+     
+
 
 # def get():
 #     for i in range(10):
