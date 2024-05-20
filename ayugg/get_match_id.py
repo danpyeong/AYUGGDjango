@@ -1,4 +1,4 @@
-from main.models import MatchData
+from main.models import MatchData, Version
 import requests
 import time
 
@@ -32,7 +32,7 @@ league_api_url = "league/v4/entries/RANKED_SOLO_5x5/"
 user_tier = ["IRON/", "BRONZE/", "SILVER/", "GOLD/", "PLATINUM/", "EMERALD/", "DIAMOND/"]
 tier_division = ["I?", "II?", "III?", "IV?"]
 
-league_url = common_url + league_api_url + user_tier[0] + tier_division[0] + "page=10&" + api_key
+league_url = "https://kr.api.riotgames.com/lol/" + "league/v4/entries/RANKED_SOLO_5x5/" + "IRON/" + "I?" + "page=10&" + "api_key=RGAPI-d7f2268a-7c6a-4551-b4bd-092cb9d35f94"
 
 # - 다이아몬드까지 티어별 url
 def get_league_url(user_tier, tier_division):
@@ -40,88 +40,64 @@ def get_league_url(user_tier, tier_division):
     url = common_url + league_api_url
 
     tier_url = []
-    for t in user_tier:
-        tier_url.append(url + t)
+    for tier in user_tier:
+        tier_url.append(url + tier)
         
-    for t_u in tier_url:
+    for t_url in tier_url:
         for division in tier_division:
-            url_list.append(t_u + division)
+            url_list.append(t_url + division)
     return url_list
 
 url_list = get_league_url(user_tier, tier_division)
 
 select_url_list = []
 for i in range(10):
-    url = url_list[2] + "page=" + str(i+10) + "&" + api_key
-    select_url_list.append(url)
+    # 각 티어당 4개의 division이 있음. 0~5 / 5~10 ...
+    for j in range(0, 5):
+        url = url_list[j] + "page=" + str(i+10) + "&" + api_key
+        select_url_list.append(url)
 
-def get():
-    for i in range(10):
-        #  - 데이터 추출 완료
-        data = get_data(select_url_list[i])
-
-        #  - summonerId 모으기
-        def get_match_id(data):
-            id_list = []
-            for index, d in enumerate(data):
-                if index <= 10:
-                    id_list.append(d['summonerId'])
-                
-                # id_list.append(d['summonerId'])
-            
-            return id_list
-
-        id_list = get_match_id(data)
-
+for url in select_url_list:
+    #  - 데이터 추출 완료
+    data = get_data(url)
+    
+    # 티어
+    tier = url.split("/")[8]
+    
+    #  - summonerId 모으기
+    summoner_id_list = []
+    for index, d in enumerate(data):
+        if index <= 30:
+            summoner_id_list.append(d['summonerId'])
         # puuid 모으기
-        puuid_api_url = "summoner/v4/summoners/"
+    
+    #  - summonerId 로 puuid 추출하기
+    puuid_api_url = "summoner/v4/summoners/"
 
-        puuid_url = common_url + puuid_api_url + "summonerId?" + api_key
+    puuid_list = []
+    for summ_id in summoner_id_list:
+        url = common_url + puuid_api_url + summ_id + "?" + api_key
+        # https://kr.api.riotgames.com/lol/summoner/v4/summoners/raNafr_iALNJPZLMKqv4cpOSfbpVqRPVS5OlK2ok0QhOcAG4?api_key=RGAPI-d7f2268a-7c6a-4551-b4bd-092cb9d35f94
+        data = get_data(url)
+        if data:
+            puuid_list.append(data['puuid'])
 
-        #  - summonerId 로 puuid 추출하기
-        def get_puuid(id_list):
-            pid_list = []
-            for id in id_list:
-                url = common_url + puuid_api_url + id + "?" + api_key
-                data = get_data(url)
-                if data:
-                    pid_list.append(data['puuid'])
+    # puuid로 matchid 모으기
+    start_match_api_url = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/"
+
+    match_id_list = []
+    for p_id in puuid_list:
+        match_id_url = start_match_api_url + p_id + "/ids?type=ranked&start=0&count=15&" + api_key
+        data = get_data(match_id_url)
+        
+        if data:
+            match_id_list += data
             
-            return pid_list
-            
-        puuid_list = get_puuid(id_list)
-
-        # puuid로 matchid 모으기
-        start_match_api_url = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/"
-
-        def get_match_id(puuid_list):
-            p_list = []
-            for index, p_id in enumerate(puuid_list):
-                match_id_url = start_match_api_url + p_id + "/ids?type=ranked&start=0&count=10&" + api_key
-                data = get_data(match_id_url)
-                if data:
-                    p_list += data
-                    
-            return p_list
-
-        match_id_list = get_match_id(puuid_list)
-
-        # print(match_id_list)
-
-        def push_data(match_id_list):
-            for list in match_id_list:   
-                MatchData.objects.get_or_create(match_id = list)
-
-        push_data(match_id_list)
-        # 문제시 삭제
-        # m = MatchData.objects.all().delete()
-
-        print("End : " + str(i))
-        if i != 9:
-            print(MatchData.objects.all().count())
-            time.sleep(10)
-            print("get Data start")
-
-# get()
+    version = Version.objects.values_list('version', flat=True).first()
+    ver = Version.objects.get(version=version)
+    for list in match_id_list:   
+        MatchData.objects.get_or_create(match_version = ver, match_id = list, tier = tier)
+    
+print("push Data End : " + str(MatchData.objects.all().count()))
 
 # 아이언 데이터 5011 게임
