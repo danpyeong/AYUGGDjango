@@ -51,6 +51,7 @@ class MatchData(models.Model):
         return self.match_id
     
 class MatchInfoData(models.Model):
+    game_tier = models.CharField(max_length=30)
     match_data_version = models.ForeignKey(Version, on_delete=models.CASCADE, related_name='match_data_version')
     match_id = models.CharField(max_length=30)
     team_id = models.CharField(max_length=5)
@@ -64,6 +65,7 @@ class MatchInfoData(models.Model):
     line = models.CharField(max_length=10)
     perks = models.TextField()
     item = models.JSONField(default=list)
+    bans = models.JSONField(default=list)
     
     def __str__(self):
         return self.match_id

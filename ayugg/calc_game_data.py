@@ -1,4 +1,4 @@
-from main.models import MatchInfoData, Version, Champion
+from main.models import MatchInfoData, Version, Champion, MatchData
 import requests
 
 
@@ -9,17 +9,17 @@ def data_set_champions():
     try:
         champ_data = Champion.objects.all().order_by("champion_name")
         
-        calc_data = {}
-        
-        # 카운터 승률 계산을 위한 자료구조 초기화 
-        counter_champ = {}
-        for data in champ_data:
-            counter_champ[data.champion_name] = { "win": 0, "lose": 0 }
+        structure_data = {}
         
         for data in champ_data:
-            calc_data[data.champion_name] = { "total" : 0, "win": 0, "lose": 0, "counter": counter_champ }
+            # 카운터 승률 계산을 위한 자료구조 초기화 
+            counter_champ = {}
+            for strc_data in champ_data:
+                counter_champ[strc_data.champion_name] = { "win": 0, "lose": 0 }
+                
+            structure_data[data.champion_name] = { "total" : 0, "win": 0, "lose": 0, "counter": counter_champ }
         
-        return calc_data
+        return structure_data
     
     except TypeError as e:
         print(f"TypeError occurred: {e}")
@@ -42,19 +42,20 @@ def input_data(champ_data):
             play_champ['total'] += 1
             play_champ['win'] += 1
             versus['win'] += 1
-        
-        print("-" * 20)
-        print("Play : " + str(data.champion_name) + " / Versus : " + str(vs_champ))
-        print("토탈 : " + str(play_champ['total']) + 
-              " / 승리 : " + str(play_champ['win']) + " / 패배 : " + str(play_champ['lose']))
-        print("카운터 : " + str(versus))
-        print("-" * 20)
                 
-        if index == 49:
-            break
+        # if index == 0:
+        #     break
+    return champ_data
 
-input_data(champ_data)    
+data = input_data(champ_data)
 
+# print(data)
+
+def calc_data():
+    total_pick = MatchData.objects.all().count()
+    print(MatchData.objects.all().count())
+
+calc_data()
 
 # "가렌" : {
 #         "total" : 10,

@@ -1,5 +1,6 @@
 from main.models import Champion, MatchInfoData, MatchData, Version
 import requests
+import time
 
 # https://asia.api.riotgames.com/lol/match/v5/matches/KR_6876572610?api_key=RGAPI-d7f2268a-7c6a-4551-b4bd-092cb9d35f94
 
@@ -42,9 +43,23 @@ def get_data(url):
         return None
 
 # 필요한 데이터만 추출하는 함수
-def data_extract(data):
+def data_extract(match_id, data, data_ban):
     # 불필요한 데이터 제외 후 필요한 데이터만 정리
     extract = []
+    
+    bans = []
+    blue_ban = data_ban[0]['bans']
+    red_ban = data_ban[1]['bans']
+    
+    for ban in blue_ban:
+        ban_name = Champion.objects.filter(champion_key = ban['championId']).values_list('champion_name', flat=True).first()
+        bans.append(ban_name)
+    
+    for ban in red_ban:
+        ban_name = Champion.objects.filter(champion_key = ban['championId']).values_list('champion_name', flat=True).first()
+        bans.append(ban_name)
+    
+    tier = MatchData.objects.filter(match_id = match_id).values_list('tier', flat=True).first()
     
     # versus를 구하기 위한 dict
     role_dict = {}
@@ -75,14 +90,20 @@ def data_extract(data):
         item.append(info['item4'])
         item.append(info['item5'])
         item.append(info['item6'])
+        
         # 룬 특성
         perks = info['perks']
+        
         # teamId 100:블루팀 / 200:레드팀
         tema_id = info['teamId']
+        
         # 승리여부
         win = info['win']
+        
+        # 정보 종합
         extract.append({'key': champ_key, 'id': champ_id, 'name': champ_name, 'role': role,
-                'item': item, 'team_id': tema_id, 'win': win, 'perks': perks, 'versus': []})
+                'item': item, 'team_id': tema_id, 'win': win, 'perks': perks, 'versus': [], 
+                'bans': bans, 'tier': tier})
     
     
     for data in extract:
@@ -95,7 +116,7 @@ def data_extract(data):
     return extract
 
 # DB에 저장하는 함수
-def push_data(game_data):
+def push_data(match_id, game_data):
     version = Version.objects.values_list('version', flat=True).first()
     ver = Version.objects.get(version=version)
     for data in game_data:
@@ -104,12 +125,12 @@ def push_data(game_data):
             match_id = match_id, team_id = data['team_id'], champion_name = data['name'],
             champion_key = data['key'], champion_id = data['id'], versus_name = data['versus']['name'],
             versus_key = data['versus']['key'], versus_id = data['versus']['id'], win = data['win'],
-            line = data['role'], perks = data['perks'], item = data['item'])
+            line = data['role'], perks = data['perks'], item = data['item'], bans = data['bans'], game_tier=data['tier'])
         
 for index, id in enumerate(ids):
     try:
         url = common_url + id + api_key
-        
+
         response = requests.get(url, headers= request_headers)
         if response.status_code == 200:
     
@@ -118,17 +139,23 @@ for index, id in enumerate(ids):
             match_id = rawdata['metadata']['matchId']
             data = rawdata['info']['participants']
             
-            game_data = data_extract(data)
+            data_ban = rawdata['info']['teams']
             
-            push_data(game_data)
+            game_data = data_extract(match_id, data, data_ban)
+            
+            push_data(match_id, game_data)
             print("Push Data End: " + str(id) + " / " + str(index))
             if index == len(ids) - 1:
                 print(" - End - ")
             
         else:
             print("Error:", response.status_code)
+            if response.status_code == 429:
+                # time.sleep(75)
+                for i in range(75):
+                    time.sleep(1)
+                    print("sleep: ", i)
  
-
     except Exception as e:
         print("An error occurred:", e)
         
