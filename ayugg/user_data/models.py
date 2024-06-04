@@ -22,5 +22,5 @@ class userModel(models.Model):
 
 
     def __str__(self):
-        return self.puuid
+        return self.gameName
     

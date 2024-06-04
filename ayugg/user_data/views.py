@@ -1,9 +1,14 @@
-from django.shortcuts import render
-
-# Create your views here.
-
+from rest_framework import viewsets, generics
 from .models import userModel
+from .serializers import ItemSerializer
 
-userModel = userModel.objects.get(pk=1)
-for match in userModel.matchList:
-    print(match.raw_data)
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = userModel.objects.all()
+    serializer_class = ItemSerializer
+
+class UserDetailView(generics.ListAPIView):
+    serializer_class = ItemSerializer
+
+    def get_queryset(self):
+        gameName = self.kwargs['gameName']
+        return userModel.objects.filter(gameName=gameName)
