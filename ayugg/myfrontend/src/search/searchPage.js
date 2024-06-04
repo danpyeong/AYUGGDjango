@@ -21,7 +21,10 @@ function SearchPage() {
     if (gameName) {
       fetch(`http://localhost:8000/search/${gameName}/`)
         .then(response => response.json())
-        .then(data => dispatch(data));
+        .then(data => {
+          console.log(data);
+          dispatch(data);
+        });
     } else {
       fetch('http://localhost:8000/search/Hide%20on%20bush')
         .then(response => response.json())
@@ -41,14 +44,14 @@ function SearchPage() {
 
   return (
     <div>
-      <Nav></Nav>
-      <ContainerDiv>
+      {/* <Nav></Nav> */}
+      {/* <ContainerDiv>
         <TopBox />
         <Button />
         <BlankDiv />
         <BottomBox />
       </ContainerDiv>
-      <BlankDiv />
+      <BlankDiv /> */}
     </div>
   );
 }
