@@ -1,18 +1,18 @@
-import { MatchButtons, MatchButton, MoreMatchButton } from "../../page/search/searchStyle/bottomBoxStyle.js";
+import { MatchButtons, MatchButton, MoreMatchButton } from "../searchStyle/bottomBoxStyle.js";
 import { useState } from "react";
-import StatisticBox from "../boxes/statisticBox";
-import MatchesBox from "../boxes/matchesBox";
-import { BlankDiv } from "../../page/search/searchStyle/topBoxStyle.js";
+import StatisticBox from "./statisticBox.js";
+import MatchesBox from "./matchesBox.js";
+import { BlankDiv } from "../searchStyle/topBoxStyle.js";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDataSuccess } from "../../redux/dataSlice.js";
-import GetStatisticData from "../../page/search/dataHandling/statisticData.js";
+import { fetchDataSuccess } from "../../../redux/dataSlice.js";
+import GetStatisticData from "../dataHandling/statisticData.js";
 
 function BottomBox() {
   const [selectedButton, setSelectedButton] = useState('whole');
   const [matchList, setMatchList] = useState([0, 1]);
   const { data } = useSelector((state) => state.data);
   const dispatch = useDispatch();
-
+  
   const handleButtonClick = (buttonName) => {
     setSelectedButton(buttonName);
     setMatchList([0, 1]);

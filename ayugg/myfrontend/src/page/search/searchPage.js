@@ -2,10 +2,10 @@ import { useEffect,useState } from "react";
 import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Nav from "../../nav/nav";
-import TopBox from "../../search/boxes/topBox";
+import TopBox from "./boxes/topBox";
 import { BlankDiv, ContainerDiv } from "./searchStyle/topBoxStyle";
-import Button from "../../search/boxes/refreshButton"
-import BottomBox from "../../search/boxes/bottomBox";
+import Button from "./boxes/refreshButton"
+import BottomBox from "./boxes/bottomBox";
 import { fetchDataRequest, fetchDataSuccess, fetchDataFailure } from "../../redux/dataSlice";
 
 function SearchPage() {

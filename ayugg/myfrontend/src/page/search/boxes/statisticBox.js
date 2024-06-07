@@ -1,9 +1,9 @@
-import * as styled from "../../page/search/searchStyle/statisticBoxStyle";
-import DoughnutChart from "../../page/search/charts/doughnut";
-import RadarCharactChart from "../../page/search/charts/radar";
-import { GetChampImg, GetKoreaName } from "../../page/search/dataHandling/filterData";
+import * as styled from "../searchStyle/statisticBoxStyle";
+import DoughnutChart from "../charts/doughnut";
+import RadarCharactChart from "../charts/radar";
+import { GetChampImg, GetKoreaName } from "../dataHandling/filterData";
 import { useEffect, useState } from "react";
-import { ChangeDoughnutChartData, ChangeRadarChartData } from "../../page/search/dataHandling/changeChartData";
+import { ChangeDoughnutChartData, ChangeRadarChartData } from "../dataHandling/changeChartData";
 
 function StatisticBox(props) {
   return (

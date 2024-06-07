@@ -1,8 +1,8 @@
-import * as styled from "../../page/search/searchStyle/matchesBoxStyle";
-import * as fd from "../../page/search/dataHandling/filterData";
+import * as styled from "../searchStyle/matchesBoxStyle";
+import * as fd from "../dataHandling/filterData";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import DetailMatchBox from "../boxes/detailMatchBox";
+import DetailMatchBox from "./detailMatchBox";
 import { useNavigate } from "react-router";
 
 function MatchesBox(props) {

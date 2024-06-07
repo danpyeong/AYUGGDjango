@@ -1,8 +1,8 @@
-import * as styled from "../../page/search/searchStyle/detailMatchBoxStyle";
-import * as fd from "../../page/search/dataHandling/filterData";
+import * as styled from "../searchStyle/detailMatchBoxStyle";
+import * as fd from "../dataHandling/filterData";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { BaronPath, dragonPath, towerPath } from "../../page/search/images/imagePath";
+import { BaronPath, dragonPath, towerPath } from "../images/imagePath";
 
 function DetailMatchBox(props) {
   return (

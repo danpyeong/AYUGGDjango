@@ -1,10 +1,10 @@
-import { UserDiv, FirstDiv, PlayerIconImg, NicknameSpan, TagSpan, SecondDiv, TierDiv, NowTierDiv, TierNameDiv, TierImg, TierListUl, NowTierLi, LabelDiv, OptionItemLi, MoreListUl, GraphBox, MoreImg } from "../../page/search/searchStyle/topBoxStyle";
-import { tierImgMapping } from '../../page/search/dataHandling/imgMapping';
+import { UserDiv, FirstDiv, PlayerIconImg, NicknameSpan, TagSpan, SecondDiv, TierDiv, NowTierDiv, TierNameDiv, TierImg, TierListUl, NowTierLi, LabelDiv, OptionItemLi, MoreListUl, GraphBox, MoreImg } from "../searchStyle/topBoxStyle";
+import { tierImgMapping } from '../dataHandling/imgMapping';
 import { useState } from "react";
-import LineTierChart from "../../page/search/charts/lineTier";
+import LineTierChart from "../charts/lineTier";
 import { useSelector } from "react-redux";
-import { GetPlayerIconImg } from "../../page/search/dataHandling/filterData";
-import { ChartCrawlingData, FilterCrawlingData } from "../../page/search/dataHandling/crawkingDataToList";
+import { GetPlayerIconImg } from "../dataHandling/filterData";
+import { ChartCrawlingData, FilterCrawlingData } from "../dataHandling/crawkingDataToList";
 
 //버튼전까지의 UI구성
 function TopBox() {
