@@ -1,6 +1,6 @@
 import { useEffect,useState } from "react";
 import { useDispatch } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Nav from "../../nav/nav";
 import TopBox from "./boxes/topBox";
 import { BlankDiv, ContainerDiv } from "./searchStyle/topBoxStyle";
@@ -12,6 +12,7 @@ function SearchPage() {
   const dispatch = useDispatch();
   let location = useLocation();
   let navigate = useNavigate();
+  const { gameName, tagLine } = useParams();
 
   const [data, setData] = useState(null);
 
@@ -19,7 +20,7 @@ function SearchPage() {
     // const nickname = location.state.nickname;
     dispatch(fetchDataRequest());
 
-    fetch(`http://localhost:8000/search/NekoL`)
+    fetch(`http://localhost:8000/search/${gameName}/${tagLine}`)
       .then(response => response.json())
       .then(data => {
         dispatch(fetchDataSuccess(data));

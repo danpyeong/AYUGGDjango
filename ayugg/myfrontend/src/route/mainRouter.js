@@ -10,7 +10,7 @@ const router = createBrowserRouter([
     element: <App />,
   },
   {
-    path:"/search",
+    path:"/search/:gameName/:tagLine",
     element:<SearchPage></SearchPage>
   },
 

@@ -8,5 +8,5 @@ router.register(r'userModel', UserViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('<str:gameName>/', UserDetailView.as_view()),
+    path('<str:gameName>/<str:tagLine>/', UserDetailView.as_view()),
 ]

@@ -69,7 +69,7 @@ export function GetSubRuneImg(runeInfo, value) {
 }
 export function GetItemImg(item) {
   if (item === 0) {
-     return `${process.env.PUBLIC_URL}` + "assets/images/item-none.jpg";
+     return `${process.env.PUBLIC_URL}` + "/assets/images/item-none.jpg";
   } else {
     return version + "img/item/" + item + ".png";
   }

@@ -131,7 +131,7 @@ function MatchBox(props) {
           <div />
         </styled.MatchDiv>}
         <styled.OpenDiv onClick={clickDropdown}>
-          <styled.OpenImg src={`${process.env.PUBLIC_URL}` + 'assets/images/down-arrow.svg'} />
+          <styled.OpenImg src={'/assets/images/down-arrow.svg'} />
         </styled.OpenDiv>
       </div>
       <DetailMatchBox isvisible={isDropdownVisible} index={matchesIndex} tierList={data[0].matches[matchesIndex].tierList} />

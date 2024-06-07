@@ -42,7 +42,7 @@ function MatchLabel(props) {
           <styled.Font1Span>{data[0].matches[matchesIndex].info.teams[0].objectives.baron.kills}</styled.Font1Span>
         </styled.MatchLabelSpan>
         <styled.MatchLabelSpan>
-          <styled.GoldImg src={`${process.env.PUBLIC_URL}` + `assets/images/yellow-coin-icon-original.svg`} />
+          <styled.GoldImg src={`${process.env.PUBLIC_URL}` + `/assets/images/yellow-coin-icon-original.svg`} />
           <styled.Font1Span>{(() => {
             let goldBlue = 0;
 
@@ -57,7 +57,7 @@ function MatchLabel(props) {
         <b>VS</b>
         <styled.MatchLabelB>{data[0].matches[matchesIndex].info.teams[1].objectives.champion.kills}</styled.MatchLabelB>
         <styled.MatchLabelSpan>
-          <styled.GoldImg src={`${process.env.PUBLIC_URL}` + `assets/images/yellow-coin-icon-original.svg`} />
+          <styled.GoldImg src={`${process.env.PUBLIC_URL}` + `/assets/images/yellow-coin-icon-original.svg`} />
           <styled.Font1Span>{(() => {
             let goldRed = 0;
 
