@@ -16,8 +16,8 @@ request_headers = {
 api_key = 'api_key=RGAPI-8a273e3c-4974-4b30-9e39-11b6aa832270'
 
 # hide on bush/KR1 league data(id값입력) [] 반환됨
-riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/hide on bush/KR1"
-# riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/NekoL/0214"
+# riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/hide on bush/KR1"
+riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/NekoL/0214"
 # riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/의심하지말고해/KR1"
 encrypted_puuid_url = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/"
 id_url = "https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/"
@@ -87,7 +87,7 @@ class search_data():
         match_id_data = get_data(matches_url + result_data['puuid'] + "/ids?count=20&" + api_key)
         result_data['matchList'] = match_id_data
         
-        match_num = 2
+        match_num = 10
         result_data['matches'] = []
         result_data['matchNum'] = []
         for m in range(match_num):
@@ -140,43 +140,43 @@ class search_data():
     data = get()
     save_user_data(data)
 
-    # more 버튼 이후
-    def moreMatch(data):
-        match_num = 2
-        match_start = len(data['matches'])
-        for m in range(match_num):
-            # print(m+match_start)
-            match_data = get_data(matchDataUrl + data['matchList'][m+match_start] + "?" + api_key)
-            tier_list = []
+    # # more 버튼 이후
+    # def moreMatch(data):
+    #     match_num = 2
+    #     match_start = len(data['matches'])
+    #     for m in range(match_num):
+    #         # print(m+match_start)
+    #         match_data = get_data(matchDataUrl + data['matchList'][m+match_start] + "?" + api_key)
+    #         tier_list = []
             
-            for j in range(10):                 
-                tier_data = get_data(id_url + match_data['info']['participants'][j]['summonerId'] + "?" + api_key)
-                if len(tier_data) != 0:
-                    if 'tier' in tier_data[0]:
-                        tier_list.append(tier_data[0]['tier'] +" "+ tier_data[0]['rank'])
-                    else:
-                        tier_list.append('UNRANK')                        
-                else:
-                    tier_list.append('UNRANK')
+    #         for j in range(10):                 
+    #             tier_data = get_data(id_url + match_data['info']['participants'][j]['summonerId'] + "?" + api_key)
+    #             if len(tier_data) != 0:
+    #                 if 'tier' in tier_data[0]:
+    #                     tier_list.append(tier_data[0]['tier'] +" "+ tier_data[0]['rank'])
+    #                 else:
+    #                     tier_list.append('UNRANK')                        
+    #             else:
+    #                 tier_list.append('UNRANK')
             
-            match_data['tierList'] = tier_list
-            data['matches'].append(match_data)
+    #         match_data['tierList'] = tier_list
+    #         data['matches'].append(match_data)
 
-            for i in range(10):
-                if data['id'] == data['matches'][0]['info']['participants'][i]['summonerId']:
-                    data['matchNum'].append(i)
-                    # print(data['matchNum'])
+    #         for i in range(10):
+    #             if data['id'] == data['matches'][0]['info']['participants'][i]['summonerId']:
+    #                 data['matchNum'].append(i)
+    #                 # print(data['matchNum'])
         
-        for i in range(10):
-            if data['id'] == data['matches'][m]['info']['participants'][i]['summonerId']:
-                data['matchNum'].append(i)
+    #     for i in range(10):
+    #         if data['id'] == data['matches'][m]['info']['participants'][i]['summonerId']:
+    #             data['matchNum'].append(i)
 
-        return data
+    #     return data
     
-    data = moreMatch(data)
-    # for i in range(len(data['matches'])):
-        # print(data['matches'][i]['tierList'])
-    save_user_data(data)
+    # data = moreMatch(data)
+    # # for i in range(len(data['matches'])):
+    #     # print(data['matches'][i]['tierList'])
+    # save_user_data(data)
 
      
 

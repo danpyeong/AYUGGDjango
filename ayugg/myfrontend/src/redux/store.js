@@ -1,5 +1,5 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit';
-import dataReducer from 'redux/dataSlice';
+import dataReducer from './dataSlice';
 
 const rankingLine = createSlice({
   name: 'line',
