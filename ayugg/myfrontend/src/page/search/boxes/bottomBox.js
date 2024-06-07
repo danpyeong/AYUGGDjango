@@ -1,6 +1,7 @@
 import { MatchButtons, MatchButton, MoreMatchButton } from "../searchStyle/bottomBoxStyle.js";
 import { useState } from "react";
 import StatisticBox from "./statisticBox.js";
+import { useParams } from 'react-router-dom';
 import MatchesBox from "./matchesBox.js";
 import { BlankDiv } from "../searchStyle/topBoxStyle.js";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,19 +13,20 @@ function BottomBox() {
   const [matchList, setMatchList] = useState([0, 1]);
   const { data } = useSelector((state) => state.data);
   const dispatch = useDispatch();
+  const { gameName, tagLine } = useParams();
   
   const handleButtonClick = (buttonName) => {
     setSelectedButton(buttonName);
     setMatchList([0, 1]);
 
     if (buttonName === 'whole') {
-      fetch(`http://localhost:8000/search/NekoL`)
+      fetch(`http://localhost:8000/search/${gameName}/${tagLine}`)
       .then(response => response.json())
       .then(data => {
         dispatch(fetchDataSuccess(data));
       })
     } else if (buttonName === 'solo') {
-      fetch(`http://localhost:8000/search/NekoL`)
+      fetch(`http://localhost:8000/search/${gameName}/${tagLine}`)
       .then(response => response.json())
       .then(_data => {
         let newMatches = [];
@@ -48,7 +50,7 @@ function BottomBox() {
           return;
         });
     } else if (buttonName === 'team') {
-      fetch(`http://localhost:8000/search/NekoL`)
+      fetch(`http://localhost:8000/search/${gameName}/${tagLine}`)
       .then(response => response.json())
       .then(_data => {
         let newMatches = [];
@@ -72,7 +74,7 @@ function BottomBox() {
           return
         });
     } else if (buttonName === 'normal') {
-      fetch(`http://localhost:8000/search/NekoL`)
+      fetch(`http://localhost:8000/search/${gameName}/${tagLine}`)
       .then(response => response.json())
       .then(_data => {
         let newMatches = [];
