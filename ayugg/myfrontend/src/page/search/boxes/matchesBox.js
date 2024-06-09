@@ -43,11 +43,11 @@ function MatchBox(props) {
       });
   }, []);
 
-  const NicknameClick = (_nickname) => {
-    if (_nickname === "") {
+  const NicknameClick = (_gameName, _tagLine) => {
+    if (_gameName === "") {
       alert("SummonerName 의 정보가 없습니다");
     } else {
-      navigate('/search', { state: { nickname: _nickname } });
+      navigate(`/search/${_gameName}/${_tagLine}`);
       window.location.reload();
     }
   };
@@ -104,8 +104,8 @@ function MatchBox(props) {
                 return (
                   <li style={{ display: 'flex' }} key={num}>
                     <styled.PartiImg src={fd.GetChampImg(data[0].matches[matchesIndex].info.participants[num].championName)} />
-                    <styled.PartiName onClick={() => NicknameClick(data[0].matches[matchesIndex].info.participants[num].summonerName)}>{
-                      data[0].matches[matchesIndex].info.participants[num].summonerName === ""
+                    <styled.PartiName onClick={() => NicknameClick(data[0].matches[matchesIndex].info.participants[num].riotIdGameName, data[0].matches[matchesIndex].info.participants[num].riotIdTagLine)}>{
+                      data[0].matches[matchesIndex].info.participants[num].riotIdGameName !== ""
                         ? data[0].matches[matchesIndex].info.participants[num].riotIdGameName
                         : data[0].matches[matchesIndex].info.participants[num].summonerName
                     }</styled.PartiName>
@@ -118,8 +118,8 @@ function MatchBox(props) {
                 return (
                   <li style={{ display: 'flex' }} key={num}>
                     <styled.PartiImg src={fd.GetChampImg(data[0].matches[matchesIndex].info.participants[num].championName)} />
-                    <styled.PartiName onClick={() => NicknameClick(data[0].matches[matchesIndex].info.participants[num].summonerName)}>{
-                      data[0].matches[matchesIndex].info.participants[num].summonerName === ""
+                    <styled.PartiName onClick={() => NicknameClick(data[0].matches[matchesIndex].info.participants[num].riotIdGameName, data[0].matches[matchesIndex].info.participants[num].riotIdTagLine)}>{
+                      data[0].matches[matchesIndex].info.participants[num].riotIdGameName !== ""
                         ? data[0].matches[matchesIndex].info.participants[num].riotIdGameName
                         : data[0].matches[matchesIndex].info.participants[num].summonerName
                     }</styled.PartiName>

@@ -10,16 +10,21 @@ function Nav() {
 
   const searchButtonClick = () => {
     console.log(location);
-    if (location.pathname === '/search') {
-      navigate('/search', { state: { nickname: inputText } });
-      window.location.reload();
+    const [gameName, tagLine] = inputText.split('#');
+    if (gameName && tagLine) {
+      if (location.pathname.includes('/search/')) {
+        navigate(`/search/${gameName}/${tagLine}`);
+        window.location.reload();
+      } else {
+        navigate(`/search/${gameName}/${tagLine}`);
+      }
     } else {
-      navigate('/search', { state: { nickname: inputText } });
+      alert('정확히 입력해주세요!!');
     }
   };
 
   const activeEnter = (e) => {
-    if(e.key === "Enter") {
+    if (e.key === "Enter") {
       searchButtonClick();
     }
   }

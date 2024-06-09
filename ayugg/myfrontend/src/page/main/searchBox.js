@@ -6,8 +6,14 @@ import { useState } from "react";
 function Search() {
     let navigate = useNavigate();
     const [inputText, setInputText] = useState('');
+
     const searchButtonClick = () => {
-        navigate('/search', { state: { nickname: inputText } });
+        const [gameName, tagLine] = inputText.split('#');
+        if (gameName && tagLine) {
+            navigate(`/search/${gameName}/${tagLine}`);
+        } else {
+            alert('정확히 입력해주세요!!');
+        }
     };
 
     const activeEnter = (e) => {

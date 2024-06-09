@@ -36,7 +36,7 @@ function StatisticBox(props) {
                     : "KDA " + ((props.data.first.kills + props.data.first.assists) / props.data.first.deaths).toFixed(2)}
                   </div>
                   <div style={{ color: "#626367", fontSize: "8px" }}>{(props.data.first.kills / props.data.totalMatch).toFixed(1)}/{(props.data.first.assists / props.data.totalMatch).toFixed(1)}/{(props.data.first.deaths / props.data.totalMatch).toFixed(1)}</div>
-                  <div style={{ color: "orange" }}>킬관여 {((props.data.first.kills + props.data.first.assists) / props.data.first.teamkills * 100).toFixed(0)}%</div>
+                  <div style={{ color: "orange" }}>킬관여 {((props.data.first.kills + props.data.first.assists) / props.data.first.teamkills * 100).toFixed(0) > 99 ? 99 : ((props.data.first.kills + props.data.first.assists) / props.data.first.teamkills * 100).toFixed(0)}%</div>
                 </styled.RightTextDiv>
               </styled.InfoCover>
             </styled.InfoContentTh>

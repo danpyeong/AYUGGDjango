@@ -100,12 +100,12 @@ function MatchDetailBlueTableBox(props) {
   const [runeInfo, setRuneInfo] = useState({});
 
   useEffect(() => {
-    fetch('https://ddragon.leagueoflegends.com/cdn/13.21.1/data/ko_KR/summoner.json')
+    fetch('https://ddragon.leagueoflegends.com/cdn/14.11.1/data/ko_KR/summoner.json')
       .then((response) => response.json())
       .then((data) => {
         setSpellInfo(data.data);
       });
-    fetch('https://ddragon.leagueoflegends.com/cdn/13.21.1/data/ko_KR/runesReforged.json')
+    fetch('https://ddragon.leagueoflegends.com/cdn/14.11.1/data/ko_KR/runesReforged.json')
       .then((response) => response.json())
       .then((data) => {
         setRuneInfo(data);
@@ -152,7 +152,7 @@ function MatchDetailBlueTableBox(props) {
               </styled.IconDiv>
               <styled.NickTierDiv>
                 <styled.PartiName>{
-                  data[0].matches[matchesIndex].info.participants[num].summonerName === ""
+                  data[0].matches[matchesIndex].info.participants[num].riotIdGameName !== ""
                     ? data[0].matches[matchesIndex].info.participants[num].riotIdGameName
                     : data[0].matches[matchesIndex].info.participants[num].summonerName
                 }</styled.PartiName>
@@ -205,12 +205,12 @@ function MatchDetailRedTableBox(props) {
   const [runeInfo, setRuneInfo] = useState({});
 
   useEffect(() => {
-    fetch('https://ddragon.leagueoflegends.com/cdn/13.21.1/data/ko_KR/summoner.json')
+    fetch('https://ddragon.leagueoflegends.com/cdn/14.11.1/data/ko_KR/summoner.json')
       .then((response) => response.json())
       .then((data) => {
         setSpellInfo(data.data);
       });
-    fetch('https://ddragon.leagueoflegends.com/cdn/13.21.1/data/ko_KR/runesReforged.json')
+    fetch('https://ddragon.leagueoflegends.com/cdn/14.11.1/data/ko_KR/runesReforged.json')
       .then((response) => response.json())
       .then((data) => {
         setRuneInfo(data);
@@ -257,7 +257,7 @@ function MatchDetailRedTableBox(props) {
               </styled.IconDiv>
               <styled.NickTierDiv>
                 <styled.PartiName>{
-                      data[0].matches[matchesIndex].info.participants[num].summonerName === ""
+                      data[0].matches[matchesIndex].info.participants[num].riotIdGameName !== ""
                         ? data[0].matches[matchesIndex].info.participants[num].riotIdGameName
                         : data[0].matches[matchesIndex].info.participants[num].summonerName
                     }</styled.PartiName>

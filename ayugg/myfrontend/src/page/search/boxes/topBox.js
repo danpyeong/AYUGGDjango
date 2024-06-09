@@ -76,7 +76,7 @@ function TopBox() {
               </NowTierDiv>
               <TierListUl>
                 <NowTierLi>
-                  <b>S23  </b>
+                  <b>S24  </b>
                   <span>{data[0].tier} {data[0].rank}</span>
                 </NowTierLi>
                 <li>
