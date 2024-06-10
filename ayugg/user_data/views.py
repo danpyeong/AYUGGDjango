@@ -11,4 +11,5 @@ class UserDetailView(generics.ListAPIView):
 
     def get_queryset(self):
         gameName = self.kwargs['gameName']
-        return userModel.objects.filter(gameName=gameName)
+        tagLine = self.kwargs['tagLine']
+        return userModel.objects.filter(gameName=gameName, tagLine=tagLine)

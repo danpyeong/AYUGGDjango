@@ -16,9 +16,9 @@ request_headers = {
 api_key = 'api_key=RGAPI-8a273e3c-4974-4b30-9e39-11b6aa832270'
 
 # hide on bush/KR1 league data(id값입력) [] 반환됨
-# riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/hide on bush/KR1"
+riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/hide on bush/KR1"
 # riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/NekoL/0214"
-riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/의심하지말고해/KR2"
+# riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/의심하지말고해/KR2"
 encrypted_puuid_url = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/"
 id_url = "https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/"
 matches_url = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/"
@@ -39,7 +39,7 @@ def get_data(url):
 
 
 class search_data():
-    
+    @staticmethod
     def get():
         result_data = {}
 
@@ -118,6 +118,7 @@ class search_data():
         # print(result_data['matches'][0]['info']['queueId'])
         return(result_data)
 
+    @staticmethod
     def save_user_data(result_data):
         user = userModel(
             puuid=result_data['puuid'],
