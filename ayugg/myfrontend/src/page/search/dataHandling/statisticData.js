@@ -14,11 +14,9 @@ export default function GetStatisticData(data) {
   let secondList = [];
   resData.totalMatch = 0;
   
-
   data[0].matches.forEach(element => {
 
-    // console.log(element.info.participants[data[0].matchNum[index]])
-    if (element.info.participants[data[0].matchNum[index]].win) {
+    if (element.info.participants[data[0].matchNum[index]].win === true) {
       resData.first.wins++;
     } else {
       resData.first.losses++;

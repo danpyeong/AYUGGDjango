@@ -16,7 +16,7 @@ request_headers = {
 api_key = 'api_key=RGAPI-8a273e3c-4974-4b30-9e39-11b6aa832270'
 
 # hide on bush/KR1 league data(id값입력) [] 반환됨
-riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/hide on bush/KR1"
+riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/이 차가 식기전에/KR1"
 # riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/NekoL/0214"
 # riot_id_url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/의심하지말고해/KR2"
 encrypted_puuid_url = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/"

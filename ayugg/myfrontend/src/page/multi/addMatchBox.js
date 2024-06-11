@@ -7,7 +7,8 @@ function AddMatchBox(props) {
   return (
     <div>
       {props.value[0].matches.map((data, index) => (
-        <MatchDiv key={index}>
+        <>{index < 5 ? 
+          <MatchDiv key={index}>
           <MatchChampImg src={(GetChampImg(data.info.participants[index].championName))}/>
           <KdaDiv style={ (data.info.participants[index].win) ? {background: "#D5E3FF", color: "#4171D6"} : {background: "#FFD8D9", color: "#D31A45"}}>
               <div>{data.info.participants[index].kills}/{data.info.participants[index].deaths}/{data.info.participants[index].assists}</div>
@@ -20,6 +21,8 @@ function AddMatchBox(props) {
           }
           </TimeDiv>
         </MatchDiv>
+         : <></>
+        }</>
       ))}
     </div>
   );
