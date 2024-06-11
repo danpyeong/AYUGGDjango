@@ -1,6 +1,7 @@
 from main.models import MatchData, Version
 import requests
 import time
+from django.db import transaction
 
 request_headers = {
     "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
@@ -12,8 +13,6 @@ api_key = "api_key=RGAPI-d7f2268a-7c6a-4551-b4bd-092cb9d35f94"
 
 common_url = "https://kr.api.riotgames.com/lol/"
 
-print(MatchData.objects.all().count())
-
 # api 호출
 def get_data(url):
     try:
@@ -22,6 +21,10 @@ def get_data(url):
             return response.json()
         else:
             print("Error:", response.status_code)
+            if response.status_code == 429:
+                for i in range(30):
+                    time.sleep(1)
+                    print(i)
             return None
     except Exception as e:
         print("An error occurred:", e)
@@ -31,8 +34,6 @@ def get_data(url):
 league_api_url = "league/v4/entries/RANKED_SOLO_5x5/"
 user_tier = ["IRON/", "BRONZE/", "SILVER/", "GOLD/", "PLATINUM/", "EMERALD/", "DIAMOND/"]
 tier_division = ["I?", "II?", "III?", "IV?"]
-
-league_url = "https://kr.api.riotgames.com/lol/" + "league/v4/entries/RANKED_SOLO_5x5/" + "IRON/" + "I?" + "page=10&" + "api_key=RGAPI-d7f2268a-7c6a-4551-b4bd-092cb9d35f94"
 
 # - 다이아몬드까지 티어별 url
 def get_league_url(user_tier, tier_division):
@@ -51,11 +52,17 @@ def get_league_url(user_tier, tier_division):
 url_list = get_league_url(user_tier, tier_division)
 
 select_url_list = []
+# 여기만 수정하면됨
+# range를 수정함에 따라 티어가 달라짐
+# 0~5 : iron / 5~10: bronze ... 
 for i in range(10):
     # 각 티어당 4개의 division이 있음. 0~5 / 5~10 ...
-    for j in range(0, 5):
-        url = url_list[j] + "page=" + str(i+10) + "&" + api_key
-        select_url_list.append(url)
+    for index, url_ in enumerate(url_list):
+        if index > 12:
+            url = url_ + "page=" + str(i+20) + "&" + api_key
+            select_url_list.append(url)
+
+# https://kr.api.riotgames.com/lol/league/v4/entries/RANKED_SOLO_5x5/GOLD/II?page=1&api_key=RGAPI-d7f2268a-7c6a-4551-b4bd-092cb9d35f94
 
 for url in select_url_list:
     #  - 데이터 추출 완료
@@ -95,9 +102,18 @@ for url in select_url_list:
             
     version = Version.objects.values_list('version', flat=True).first()
     ver = Version.objects.get(version=version)
-    for list in match_id_list:   
-        MatchData.objects.get_or_create(match_version = ver, match_id = list, tier = tier)
+    for list in match_id_list:
+        try:
+            with transaction.atomic():
+                # match_id가 이미 존재하는지 확인
+                if not MatchData.objects.filter(match_id=list).exists():
+                    # 존재하지 않으면 데이터 생성
+                    MatchData.objects.create(match_version=ver, match_id=list, tier=tier)
+                else:
+                    print(f"MatchData with match_id={list} already exists.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+    print("push Data End : " + str(MatchData.objects.all().count()) + " / " + tier)
+    
     
 print("push Data End : " + str(MatchData.objects.all().count()))
-
-# 아이언 데이터 5011 게임

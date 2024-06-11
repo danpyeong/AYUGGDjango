@@ -128,34 +128,37 @@ def push_data(match_id, game_data):
             line = data['role'], perks = data['perks'], item = data['item'], bans = data['bans'], game_tier=data['tier'])
         
 for index, id in enumerate(ids):
-    try:
-        url = common_url + id + api_key
+    if index > -1 :
+        try:
+            if index > -1:
+                url = common_url + id + api_key
 
-        response = requests.get(url, headers= request_headers)
-        if response.status_code == 200:
+                response = requests.get(url, headers= request_headers)
+                if response.status_code == 200:
+            
+                    rawdata = get_data(url)
+                    
+                    match_id = rawdata['metadata']['matchId']
+                    data = rawdata['info']['participants']
+                    
+                    data_ban = rawdata['info']['teams']
+                    
+                    game_data = data_extract(match_id, data, data_ban)
+                    
+                    push_data(match_id, game_data)
+                    print("Push Data End: " + str(id) + " / " + str(index))
+                    if index == len(ids) - 1:
+                        print(" - End - ")
+                    
+                else:
+                    print("Error:", response.status_code)
+                    if response.status_code == 429:
+                        for i in range(80):
+                            time.sleep(1)
+                            if i%10 == 0:
+                                print("sleep: ", i)
     
-            rawdata = get_data(url)
-            
-            match_id = rawdata['metadata']['matchId']
-            data = rawdata['info']['participants']
-            
-            data_ban = rawdata['info']['teams']
-            
-            game_data = data_extract(match_id, data, data_ban)
-            
-            push_data(match_id, game_data)
-            print("Push Data End: " + str(id) + " / " + str(index))
-            if index == len(ids) - 1:
-                print(" - End - ")
-            
-        else:
-            print("Error:", response.status_code)
-            if response.status_code == 429:
-                # time.sleep(75)
-                for i in range(75):
-                    time.sleep(1)
-                    print("sleep: ", i)
- 
-    except Exception as e:
-        print("An error occurred:", e)
+        except Exception as e:
+            print("An error occurred:", e)
         
+# 5040까지 했음

@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 # from jsonfield import JSONField
 
@@ -41,15 +42,15 @@ class ChampionBasicInfo(models.Model):
     
     def __str__(self):
         return self.champ_name
-    
+
 class MatchData(models.Model):
     match_version = models.ForeignKey(Version, on_delete=models.CASCADE, related_name='match_version')
     tier = models.CharField(max_length=10)
-    match_id = models.CharField(max_length=30, primary_key = True)
+    match_id = models.CharField(max_length=30)
     
     def __str__(self):
         return self.match_id
-    
+
 class MatchInfoData(models.Model):
     game_tier = models.CharField(max_length=30)
     match_data_version = models.ForeignKey(Version, on_delete=models.CASCADE, related_name='match_data_version')
@@ -69,3 +70,21 @@ class MatchInfoData(models.Model):
     
     def __str__(self):
         return self.match_id
+    
+
+class StaticsChampionMiddleData(models.Model):
+    champ_middle_data_version = models.CharField(max_length=15)
+    champ_middle_data_line = models.CharField(max_length=20)
+    champ_middle_data_tier = models.CharField(max_length=20)
+    champ_middle_data_name = models.CharField(max_length=30)
+    champ_middle_data_img = models.CharField(max_length=30)
+    champ_middle_data_pick = models.CharField(max_length=30)
+    champ_middle_data_win = models.CharField(max_length=30)
+    champ_middle_data_ban = models.JSONField()
+    champ_middle_data_counter1 = models.JSONField()
+    champ_middle_data_counter2 = models.JSONField()
+    champ_middle_data_counter3 = models.JSONField()
+    
+    def __str__(self):
+        data = [self.champ_middle_data_tier, self.champ_middle_data_line]
+        return data
