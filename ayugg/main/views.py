@@ -1,7 +1,6 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
-from main.calc_game_data import statics_data
 from .models import MatchInfoData, Version, Champion, MatchData, StaticsChampionMiddleData
 from django.db.models import Q
 import json
