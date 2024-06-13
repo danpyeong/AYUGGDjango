@@ -1,0 +1,29 @@
+@font-face {
+  font-family: "ROKAF Sans Medium";
+  font-weight: 500;
+  src: url("./fonts/ROKAF\ Sans\ Medium.ttf") format("truetype");
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: "ROKAF Sans Medium";
+}
+
+button{
+  font-family: "ROKAF Sans Medium";
+}
+
+
+input{
+  font-family: "ROKAF Sans Medium";
+}
+
+select{
+  font-family: "ROKAF Sans Medium";
+}
+
+textarea{
+  font-family: "ROKAF Sans Medium";
+}
