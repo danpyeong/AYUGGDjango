@@ -1,4 +1,4 @@
-import Nav from "../../nav/nav";
+import Nav from "../../nav";
 import { Logo } from "./mainStyle/mainStyle";
 import Search from "./searchBox";
 

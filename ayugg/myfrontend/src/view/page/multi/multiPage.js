@@ -1,5 +1,5 @@
 import { ContainerDiv, CustomTextarea, ButtonsDiv, CountrySelect, SearchButton, ResultDiv, BlankDiv } from "./multiStyle/multiPageStyle";
-import Nav from "../../nav/nav";
+import Nav from "../../nav";
 import { useState, useEffect } from 'react';
 import Filter from './dataHandling/textareaFilter';
 import AddBox from './addBox';

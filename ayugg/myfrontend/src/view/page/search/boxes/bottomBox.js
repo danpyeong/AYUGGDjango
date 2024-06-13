@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import MatchesBox from "./matchesBox.js";
 import { BlankDiv } from "../searchStyle/topBoxStyle.js";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDataSuccess } from "../../../redux/dataSlice.js";
+import { fetchDataSuccess } from "../../../../redux/dataSlice.js";
 import GetStatisticData from "../dataHandling/statisticData.js";
 
 function BottomBox() {
