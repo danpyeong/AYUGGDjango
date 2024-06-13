@@ -4,7 +4,6 @@ export const Table=styled.table`
     border-collapse: collapse;
     width: 60%;
     margin: 25px auto;
-    
 `;
 
 export const Th=styled.th`
@@ -22,6 +21,7 @@ export const Td=styled.td`
     text-align: center;
     padding: 10px;
     color: white;
+    font-size: 13px;
 `;
 
 export const TdName=styled.td`

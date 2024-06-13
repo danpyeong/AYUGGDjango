@@ -1,4 +1,3 @@
-import { getRankingMain } from '../../../model/api/rankingMain';
 import React, { useEffect, useState } from 'react';
 import Nav from '../../nav';
 import * as styled from './rakingMainstyle';
@@ -6,14 +5,15 @@ import * as styled from './rakingMainstyle';
 
 
 const StatusTableRowItem = (props) => {
-    const { summonerName, tier, leaguePoints } = props.data;
+    const { gameName, tagLine, tier, rank, leaguePoints } = props.data;
+    console.log(props.data)
   
     return (
       <styled.StatusTableDataContainer>
         <styled.StatusTableData>
           <styled.RankStatusTableRow>{props.index + 1}</styled.RankStatusTableRow>
-          <styled.NickStatusTableRow>{summonerName}</styled.NickStatusTableRow>
-          <styled.StatusTableRow>{tier}</styled.StatusTableRow>
+          <styled.NickStatusTableRow>{gameName} #{tagLine}</styled.NickStatusTableRow>
+          <styled.StatusTableRow>{tier} {rank}</styled.StatusTableRow>
           <styled.StatusTableRow>{leaguePoints}LP</styled.StatusTableRow>
         </styled.StatusTableData>
       </styled.StatusTableDataContainer>
@@ -51,14 +51,16 @@ function RankingMain(){
   const [flex , setFlex] = useState([]);
 
   useEffect(()=>{
-    getRankingMain('solo')
-    .then((data)=>{
+    fetch(`http://localhost:8000/ranking/SoloRankModel/`)
+    .then(response => response.json())
+    .then(data => {
       setSolo(data);
-    });
-    getRankingMain('flex')
-    .then((data)=>{
+    })
+    fetch(`http://localhost:8000/ranking/FlexRankModel/`)
+    .then(response => response.json())
+    .then(data => {
       setFlex(data);
-    });
+    })
   },[]);
 
     return(

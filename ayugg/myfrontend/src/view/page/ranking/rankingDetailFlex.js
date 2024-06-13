@@ -1,4 +1,3 @@
-import { getRanker } from "../../../model/api/ranking";
 import { useEffect, useState } from "react";
 import Nav from "../../nav";
 import * as styled from "./rankingstyle";
@@ -8,10 +7,12 @@ function RankingDetailFlex(){
     const [user, setUser]=useState([]);
 
     useEffect(()=>{
-        getRanker('flex')
-        .then((data)=>{
+        fetch(`http://localhost:8000/ranking/FlexRankModel/`)
+        .then(response => response.json())
+        .then(data => {
             setUser(data);
-        });
+            // console.log(data);
+        })
     },[]);
 
 
@@ -34,16 +35,16 @@ function RankingDetailFlex(){
                         <styled.MainTr key={index}>
                             <styled.Td>{index+1}</styled.Td>
                             <styled.TdName>
-                                <styled.IconImage src={`http://ddragon.leagueoflegends.com/cdn/13.23.1/img/profileicon/${info.icon}.png`}></styled.IconImage>
-                                <styled.NameSpan>{info.summonerName}</styled.NameSpan>
+                                <styled.IconImage src={`http://ddragon.leagueoflegends.com/cdn/14.12.1/img/profileicon/${info.profileIconId}.png`}></styled.IconImage>
+                                <styled.NameSpan>{info.gameName} #{info.tagLine}</styled.NameSpan>
                             </styled.TdName>
                             <styled.Td>{info.tier}</styled.Td>
-                            <styled.Td>{info.level}</styled.Td>
+                            <styled.Td>{info.summonerLevel}</styled.Td>
                             <styled.Td>{info.leaguePoints} LP</styled.Td>                                                   
                             <styled.TdWins>
-                                <ProgressBar progress={info.percent} win={info.wins} lose={info.losses}/> 
+                                <ProgressBar progress={Math.ceil((info.wins / (info.wins + info.losses))*100)} win={info.wins} lose={info.losses}/> 
                             </styled.TdWins> 
-                            <styled.TdPercent>{info.percent}%</styled.TdPercent>                           
+                            <styled.TdPercent>{Math.ceil((info.wins / (info.wins + info.losses))*100)}%</styled.TdPercent>                           
                             
                         </styled.MainTr>
                     );
