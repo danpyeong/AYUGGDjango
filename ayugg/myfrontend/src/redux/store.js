@@ -13,7 +13,7 @@ const rankingLine = createSlice({
 
 const rankingTier= createSlice({
   name: 'tier',
-  initialState : 'Emerald',
+  initialState : 'GOLD',
   reducers:{
     changeTier(state, tier){
       return state = tier.payload;
@@ -23,7 +23,7 @@ const rankingTier= createSlice({
 
 const rankingVersion= createSlice({
   name: 'version',
-  initialState : '13.23',
+  initialState : '14.11.1',
   reducers:{
     changeVersion(state, ver){
       return state = ver.payload;
