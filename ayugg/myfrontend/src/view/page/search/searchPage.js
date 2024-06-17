@@ -23,8 +23,17 @@ function SearchPage() {
     fetch(`http://localhost:8000/search/${gameName}/${tagLine}`)
       .then(response => response.json())
       .then(data => {
-        dispatch(fetchDataSuccess(data));
-        setData(data);
+        if (data.length === 0){
+          dispatch(fetchDataFailure(error));
+          navigate('/');
+          setTimeout(() => {
+            alert('정확한 소환사 이름을 입력해주세요');
+          }, 500);
+          return;
+        } else {
+          dispatch(fetchDataSuccess(data));
+          setData(data);
+        }
       })
       .catch(error => {
         dispatch(fetchDataFailure(error));
