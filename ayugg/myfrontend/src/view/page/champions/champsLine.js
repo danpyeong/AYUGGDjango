@@ -1,5 +1,4 @@
 import * as styled from "./champsStyle";
-// import { getChampionRanking } from "model/api/champions";
 import { getChampionRanking } from "../../../model/api/champions";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -146,45 +145,104 @@ export function Ranking() {
       getChampionRanking(tier, line, ver)
       .then((data)=>{
         setRank(JSON.parse(data));
-        // console.log(JSON.parse(data));
       })
   },[tier, line, ver]);
 
-  let i = 0;
+  let win_calc_list = [];
+  let pick_calc_list = [];
+  let ban_calc_list = [];
 
-  function getRank(rawData){
-    // const dict = {
-    //   item1: { key1: 3, key2: 5 },
-    //   item2: { key1: 1, key2: 4 },
-    //   item3: { key1: 2, key2: 6 }
-    // };
-    const dict = rawData.fields;
-    const entries = Object.entries(dict);
-
-    // 특정 키 'key1'을 기준으로 배열을 정렬
-    const keyToSortBy = 'data.champ_middle_data_win';
-    entries.sort((a, b) => a[1][keyToSortBy] - b[1][keyToSortBy]);
-
-    // 배열을 다시 객체로 변환
-    const sortedDict = Object.fromEntries(entries);
-
-    console.log(sortedDict);
-  };
-
-  // getRank(rank);
-
-  let list = rank.map((rawdata, index) => {
+  function push_rate_list(){ rank.map((rawdata, index) => {
     let data = rawdata.fields;
-    let ver = data.champ_middle_data_version;
 
     function ceilRate(number) {
       return Math.ceil(number * 100) / 100;
+    };
+
+    let winRate = ceilRate(data.champ_middle_data_win);
+    let pickRate = ceilRate(data.champ_middle_data_pick);
+    let banRate = ceilRate(data.champ_middle_data_ban);
+
+    win_calc_list.push(winRate);
+    pick_calc_list.push(pickRate);
+    ban_calc_list.push(banRate);
+
+    data.champ_middle_data_win = winRate;
+    data.champ_middle_data_pick = pickRate;
+    data.champ_middle_data_ban = banRate;
+    });
+  };
+
+  push_rate_list();
+
+  let calc_champ_rate = {}
+
+  function calc_rate_list(win, pick, ban, rank){
+    let sum = 0;
+    let i = 0;
+    let sort_dict = {};
+
+    win.map((data, index) => {
+      calc_champ_rate[index] = 0;
+      let score = data * 50;
+      calc_champ_rate[index] += score;
+      sum += score;
+      i += 1;
+    });
+
+    pick.map((data, index) => {
+      let score = data * 20;
+      calc_champ_rate[index] += score;
+      sum += score;
+    });
+    ban.map((data, index) => {
+      let score = data * 20;
+      calc_champ_rate[index] += score;
+      sum += score;
+    });
+
+    let avg = sum / i
+
+    var sortable = [];
+    for (var name in calc_champ_rate){
+      sortable.push([name, calc_champ_rate[name]]);
     }
 
-    let winRate = ceilRate(data.champ_middle_data_win)
-    let pickRate = ceilRate(data.champ_middle_data_pick)
-    let banRate = ceilRate(data.champ_middle_data_ban)
+    sortable.sort(function(a, b) {
+      return b[1] - a[1];
+    });
 
+    for (var data in sortable){
+      sort_dict[sortable[data][0]] = sortable[data][1];
+    };
+
+    return [sort_dict, avg];
+  };
+
+  let calc_rate_data = calc_rate_list(win_calc_list, pick_calc_list, ban_calc_list, rank)
+
+  function plus_weight(rank) {
+    rank.map((rawdata, index)=>{
+      let data = rawdata.fields;
+      data['weight'] = calc_rate_data[0][index];
+    });
+
+    rank.sort((a, b) => b.fields.weight - a.fields.weight);
+
+    return rank;
+  };
+  
+  let re_rank = plus_weight(rank);
+
+  let i = 0;
+  let list = re_rank.map((rawdata, index) => {
+    let data = rawdata.fields;
+    let weight = parseInt(data.weight);
+    let avg = parseInt(calc_rate_data[1]);
+    let ver = data.champ_middle_data_version;
+    let winRate = data.champ_middle_data_win;
+    let pickRate = data.champ_middle_data_pick;
+    let banRate = data.champ_middle_data_ban;
 
     function getId(data) {
       let id_split = data.split('.')
@@ -205,8 +263,24 @@ export function Ranking() {
       };
     };
 
+    let ranking = "1";
+    if (weight >= avg * 1.3) {
+      ranking = "0";
+    } else if (weight >= avg * 1.2 && weight < avg * 1.3) {
+      ranking = "1";
+    } else if (weight >= avg * 1.1 && weight < avg * 1.2) {
+      ranking = "2";
+    } else if (weight >= avg * 1.0 && weight < avg * 1.1) {
+      ranking = "3";
+    } else if (weight >= avg * 0.9 && weight < avg * 1.0) {
+      ranking = "4";
+    } else if (weight >= avg * 0.1 && weight < avg * 0.9) {
+      ranking = "5";
+    }
+
     // 해야할 일 data를 나름의 기준을 세워서 순위를 정한 후 보여줘야함
     // 데이터를 들고올 때 너무 느린데 해결 방법을 찾아야할 듯
+    // -> 이거는 통계를 db에 넣고 직접 들고오기로 함.
 
     let championImg = getImg(ver, data.champ_middle_data_img);
 
@@ -227,12 +301,11 @@ export function Ranking() {
                   <styled.RankingChampionNameBox>{data.champ_middle_data_name}</styled.RankingChampionNameBox>
               </styled.RankingChampionLink>
             </styled.RankingDataBox>
-            {/* <styled.RankingDataBox $width="10%">{data.champtier === "0" ? "OP" : data.champtier}</styled.RankingDataBox> */}
-            {/* 아래 랭킹 어찌해야할지 고민해야함. */}
-            <styled.RankingDataBox $width="10%">{}</styled.RankingDataBox>
+            <styled.RankingDataBox $width="10%">{ranking === "0" ? "OP" : ranking}</styled.RankingDataBox>
+            {/* <styled.RankingDataBox $width="10%">{ranking}</styled.RankingDataBox> */}
             <styled.RankingDataBox $width="10%">{winRate + "%"}</styled.RankingDataBox>
-            <styled.RankingDataBox $width="10%">{ceilRate(data.champ_middle_data_pick) + "%"}</styled.RankingDataBox>
-            <styled.RankingDataBox $width="10%">{ceilRate(data.champ_middle_data_ban) + "%"}</styled.RankingDataBox>
+            <styled.RankingDataBox $width="10%">{pickRate + "%"}</styled.RankingDataBox>
+            <styled.RankingDataBox $width="10%">{banRate + "%"}</styled.RankingDataBox>
             <styled.RankingDataBox $width="20%">
               {data.champ_middle_data_counter1.name !== "N/A" ? 
               (<styled.RankingChampionLink $size="auto" to={`/champions/${getId(data.champ_middle_data_counter1.img)}`}>

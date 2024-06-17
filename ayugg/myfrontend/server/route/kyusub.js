@@ -23,8 +23,6 @@ router.get('/getdata', function (req, res){
 });
 
 router.post('/getdata/po', function (req, res){
-    // console.log('라인: ',req.body.info.line);
-    // console.log('티어: ',req.body.info.tier);
     db.all(`SELECT * FROM cham WHERE line='${req.body.info.line}' AND tier='${req.body.info.tier}'`,(err, rows)=>{
         if(err){
             res.status(400).send(err.message);

@@ -73,13 +73,13 @@ class MatchInfoData(models.Model):
     
 
 class StaticsChampionMiddleData(models.Model):
-    champ_middle_data_version = models.CharField(max_length=15)
-    champ_middle_data_line = models.CharField(max_length=20)
-    champ_middle_data_tier = models.CharField(max_length=20)
-    champ_middle_data_name = models.CharField(max_length=30)
-    champ_middle_data_img = models.CharField(max_length=30)
-    champ_middle_data_pick = models.CharField(max_length=30)
-    champ_middle_data_win = models.CharField(max_length=30)
+    champ_middle_data_version = models.CharField(max_length = 15)
+    champ_middle_data_line = models.CharField(max_length = 20)
+    champ_middle_data_tier = models.CharField(max_length = 20)
+    champ_middle_data_name = models.CharField(max_length = 30)
+    champ_middle_data_img = models.CharField(max_length = 30)
+    champ_middle_data_pick = models.CharField(max_length = 30)
+    champ_middle_data_win = models.CharField(max_length = 30)
     champ_middle_data_ban = models.JSONField()
     champ_middle_data_counter1 = models.JSONField()
     champ_middle_data_counter2 = models.JSONField()
@@ -88,3 +88,50 @@ class StaticsChampionMiddleData(models.Model):
     def __str__(self):
         data = [self.champ_middle_data_tier, self.champ_middle_data_line]
         return data
+    
+class AllGameData(models.Model):
+    all_game_version = models.CharField(max_length = 15)
+    all_game_data = models.JSONField()
+
+# 수정 필요
+# class AllGameData(models.Model):
+#     all_game_version = models.CharField(max_length = 15)
+#     all_game_tier = models.CharField(max_length = 15) -> 아마 유저 한 명의 티어를 뽑아내어 그 티어로 해야할 것 같음
+#     all_game_data = models.JSONField() -> 해당 게임 총 데이터
+#     all_timeline_data = models.JSONField() -> 해당 게임 총 타임라인별 데이터
+    
+
+class ChampionDetails(models.Model):
+    detail_champ_id = models.CharField(max_length = 20)
+    detail_champ_name = models.CharField(max_length = 20)
+    detail_win_counter_1 = models.JSONField()
+    detail_win_counter_2 = models.JSONField()
+    detail_win_counter_3 = models.JSONField()
+    detail_lose_counter_1 = models.JSONField()
+    detail_lose_counter_2 = models.JSONField()
+    detail_lose_counter_3 = models.JSONField()
+    detail_rune_1 = models.JSONField()
+    detail_rune_2 = models.JSONField()
+    detail_skill_master = models.JSONField()
+    detail_skill_build = models.JSONField()
+    detail_spell = models.JSONField()
+    detail_start = models.JSONField()
+    detail_shoes = models.JSONField()
+    detail_item_build = models.JSONField()
+    detail_use_legend = models.JSONField()
+    
+class AllStaticsData(models.Model):
+    statics_tier = models.CharField(max_length = 15)
+    statics_position = models.CharField(max_length = 15)
+    statics_ranking = models.CharField(max_length = 10)
+    statics_champ_name = models.CharField(max_length = 20)
+    statics_champ_img = models.CharField(max_length = 20)
+    statics_champ_id = models.CharField(max_length = 20)
+    statics_play = models.CharField(max_length = 20)
+    statics_kda = models.CharField(max_length = 20)
+    statics_win = models.CharField(max_length = 20)
+    statics_pick = models.CharField(max_length = 20)
+    statics_ban = models.CharField(max_length = 20)
+    statics_cs = models.CharField(max_length = 20)
+    statics_gold = models.CharField(max_length = 20)
+    
