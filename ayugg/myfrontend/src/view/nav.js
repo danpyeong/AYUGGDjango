@@ -34,8 +34,6 @@ function Nav() {
         <LinkList url="/statistics" name="통계" />
         <LinkList url="/ranking" name="랭킹" />
         <LinkList url="/multi" name="멀티서치" />
-        <LinkList url="/challenger" name="챌린저매치" />
-        <LinkList url="/event" name="대회일정" />
       </styled.NavBoxButton>
       <styled.NavBoxSearch>
         <styled.Search>
@@ -71,13 +69,7 @@ function LinkList(props) {
     case '멀티서치':
       width = "80px";
       break;
-    case '대회일정':
-      width = "80px";
-      break;
     case '챔피언분석':
-      width = "100px";
-      break;
-    case '챌린저매치':
       width = "100px";
       break;
   }
