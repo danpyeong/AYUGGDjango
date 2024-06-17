@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'main.apps.MainConfig',
     'user_data.apps.UserDataConfig',
+    'rank_data.apps.RankDataConfig',
     'corsheaders',
 ]
 
