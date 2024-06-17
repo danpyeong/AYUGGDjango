@@ -95,3 +95,19 @@ export const StyleLink = styled(Link)`
     text-decoration: underline dotted 3px ;
     color: #fff;
 `;
+
+export const RefreshButton = styled.button`
+  margin-top: 5px;
+  float: left;
+  padding: 5px 10px;
+  color: #fff;
+  background: blue;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+`;
+export const RefreshButtonImg = styled.img`
+  padding: 3px 20px 0px 20px;
+  height: 20px;
+
+`;
