@@ -100,7 +100,6 @@ class AllGameData(models.Model):
 #     all_game_data = models.JSONField() -> 해당 게임 총 데이터
 #     all_timeline_data = models.JSONField() -> 해당 게임 총 타임라인별 데이터
     
-# class AllStaticsData(models.Model):
 
 class ChampionDetails(models.Model):
     detail_champ_id = models.CharField(max_length = 20)
@@ -120,4 +119,19 @@ class ChampionDetails(models.Model):
     detail_shoes = models.JSONField()
     detail_item_build = models.JSONField()
     detail_use_legend = models.JSONField()
+    
+class AllStaticsData(models.Model):
+    statics_tier = models.CharField(max_length = 15)
+    statics_position = models.CharField(max_length = 15)
+    statics_ranking = models.CharField(max_length = 10)
+    statics_champ_name = models.CharField(max_length = 20)
+    statics_champ_img = models.CharField(max_length = 20)
+    statics_champ_id = models.CharField(max_length = 20)
+    statics_play = models.CharField(max_length = 20)
+    statics_kda = models.CharField(max_length = 20)
+    statics_win = models.CharField(max_length = 20)
+    statics_pick = models.CharField(max_length = 20)
+    statics_ban = models.CharField(max_length = 20)
+    statics_cs = models.CharField(max_length = 20)
+    statics_gold = models.CharField(max_length = 20)
     

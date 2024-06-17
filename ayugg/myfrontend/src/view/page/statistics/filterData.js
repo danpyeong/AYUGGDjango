@@ -27,15 +27,31 @@ export const lineButtons=[
 
 export const tierButtons=[
     {
-        name:"Platinum",
+        name:"IRON",
+        value:"iron",
+    },
+    {
+        name:"BRONZE",
+        value:"bronze",
+    },
+    {
+        name:"SILVER",
+        value:"silver",
+    },
+    {
+        name:"GOLD",
+        value:"gold",
+    },
+    {
+        name:"PLATINUM",
         value:"plattinum",
     },
     {
-        name:"Emerald",
+        name:"EMERALD",
         value:"emerald",
     },
     {
-        name:"Diamond",
+        name:"DIAMOND",
         value:"diamond",
     }
 ];

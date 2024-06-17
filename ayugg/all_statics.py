@@ -1,6 +1,6 @@
 import copy
 import json
-from main.models import AllGameData, Version, Champion, ChampionBasicInfo, ChampionDetails
+from main.models import AllGameData, Version, Champion, ChampionDetails, AllStaticsData
 import requests
 import time
 import sqlite3
@@ -61,7 +61,58 @@ def post_data():
         except sqlite3.OperationalError as e:
             print(f"OperationalError: {e}")
 
-post_data()
+# post_data()
+
+def statiacs_data():
+    # 데이터베이스 파일 경로 설정
+    db_path = os.path.join('myfrontend', 'server', 'crawling', 'dbData', 'data.db')
+
+    # 경로와 파일이 존재하는지 확인
+    if not os.path.exists(db_path):
+        print(f"Error: The database file at {db_path} does not exist.")
+    else:
+        # SQLite 데이터베이스 연결
+        try:
+            conn = sqlite3.connect(db_path)
+                
+            # 커서 생성
+            cursor = conn.cursor()
+            
+            cursor.execute(f"SELECT * FROM cham;")
+            rows = cursor.fetchall()
+            # 데이터 출력
+            print(f"Data from cham table :")
+            for index, row in enumerate(rows):
+                ranking, champ_name, play, kda, win, pick, ban, cs, gold, img, position, tier = row 
+                data = Champion.objects.filter(champion_name = champ_name)
+                for i in data:
+                    img = i.champion_img
+                    id = i.champion_id
+                    
+                AllStaticsData.objects.get_or_create(
+                                    statics_tier = tier,
+                                    statics_position = position,
+                                    statics_ranking = ranking,
+                                    statics_champ_name = champ_name,
+                                    statics_champ_img = img,
+                                    statics_champ_id = id,
+                                    statics_play = play,
+                                    statics_kda = kda,
+                                    statics_win = win,
+                                    statics_pick = pick,
+                                    statics_ban = ban,
+                                    statics_cs = cs,
+                                    statics_gold = gold,)
+            
+            # 연결 종료
+            conn.close()
+                
+        except sqlite3.OperationalError as e:
+            print(f"OperationalError: {e}")
+
+statiacs_data()
+
+# ----------------------------------------------------------------------
 
 request_headers = {
     "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",

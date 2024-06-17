@@ -1,4 +1,4 @@
-import { postChampion } from "../../../model/api/statistics";
+import { getChampionStat } from "../../../model/api/statistics";
 import { useEffect } from "react";
 import { useState } from "react";
 import Nav from "../../nav";
@@ -12,12 +12,12 @@ function StatisticsMain(){
     const [tier, setTier]=useState('plattinum');
 
     useEffect(()=>{
-        postChampion(tier,line)
+        getChampionStat(tier,line)
         .then((data)=>{
-            setCham(data);
+            setCham(JSON.parse(data));
+            console.log(data);
         });
     },[tier, line]);
-
 
     function handleLine(e){
         setLine(e.target.value);
@@ -25,6 +25,10 @@ function StatisticsMain(){
 
     function handleTier(e){
         setTier(e.target.value);
+    }
+
+    function get_img(img){
+        return 'https://ddragon.leagueoflegends.com/cdn/14.11.1/img/champion/'+ img
     }
 
     return (
@@ -79,26 +83,28 @@ function StatisticsMain(){
                     <styled.Th>cs</styled.Th>
                     <styled.Th>골드</styled.Th>
                 </styled.Tr>
-                {cham.map((info,index)=>{
-                    const iwin=info.win.replace('%','');
-                    const ipicks=info.picks.replace('%','');
-                    const ibanned=info.banned.replace('%','');
-
+                {cham.map((raw,index)=>{
+                    let info = raw.fields
+                    console.log(info)
+                    const iwin = info.statics_win.split('%')[0];
+                    const ipicks = info.statics_pick.split('%')[0];
+                    const ibanned = info.statics_ban.split('%')[0];
+                    let play = info.statics_play
                     return(
                         <styled.Tr key={index}>
-                            <styled.Td>{info.rank}</styled.Td>
+                            <styled.Td>{info.statics_ranking}</styled.Td>
                             <styled.TdName>
-                                <styled.IconImage src={info.img}></styled.IconImage>
-                                <styled.NameSpan>{info.champion}</styled.NameSpan>
+                                <styled.IconImage src={get_img(info.statics_champ_img)}></styled.IconImage>
+                                <styled.NameSpan>{info.statics_champ_name}</styled.NameSpan>
                             </styled.TdName>
-                            <styled.Td>{info.gameplay}</styled.Td>
-                            <styled.Td>{info.rate}</styled.Td>
+                            <styled.Td>{play}</styled.Td>
+                            <styled.Td>{info.statics_kda}</styled.Td>
                             <styled.Tds>
                                 <styled.MainDiv>
                                     <div>
                                         <ProgressBar1 bgcolor="#3490E5" progress={iwin} height={15}/>
                                     </div>
-                                    <div>{info.win}</div>
+                                    <div>{iwin}</div>
                                 </styled.MainDiv>                                
                             </styled.Tds>
                             <styled.Tds>
@@ -106,7 +112,7 @@ function StatisticsMain(){
                                     <div>
                                         <ProgressBar1 bgcolor="#DBC926" progress={ipicks} height={15} />
                                     </div>
-                                    <div>{info.picks}</div>
+                                    <div>{ipicks}</div>
                                 </styled.MainDiv>                                
                             </styled.Tds>
                             <styled.Tds>
@@ -114,11 +120,11 @@ function StatisticsMain(){
                                     <div>
                                         <ProgressBar1 bgcolor="#E64638" progress={ibanned} height={15}/>
                                     </div>
-                                    <div>{info.banned}</div>
+                                    <div>{ibanned}</div>
                                 </styled.MainDiv>                                
                             </styled.Tds>
-                            <styled.Td>{info.cs}</styled.Td>
-                            <styled.Td>{info.gold}G</styled.Td>
+                            <styled.Td>{info.statics_cs}</styled.Td>
+                            <styled.Td>{info.statics_gold}G</styled.Td>
                         </styled.Tr>
                     );
                 })}
