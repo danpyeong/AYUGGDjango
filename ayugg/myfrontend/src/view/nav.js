@@ -9,7 +9,6 @@ function Nav() {
   const location = useLocation();
 
   const searchButtonClick = () => {
-    console.log(location);
     if (location.pathname === '/search') {
       navigate('/search', { state: { nickname: inputText } });
       window.location.reload();

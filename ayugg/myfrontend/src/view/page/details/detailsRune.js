@@ -8,8 +8,8 @@ const runeApiData = await RuneApi();
 
 // ★ 룬 ★ -----------------------------------------
 // 룬 api에서 해당 챔피언에게 해당되는 룬만 정제해서 뱉어냄
-function GetRuneData(detail, runeData, version) {
-  const ver = version === '1' ? detail.version1 : detail.version2
+function GetRuneData(detail, runeData) {
+  const ver = detail;
   let data;
   let mainTitle;
   let subTitle;
@@ -93,8 +93,8 @@ function RuneImgTag(props) {
 
 // 룬 왼쪽에 대표적인 룬 2개를 보여주는 NavBar
 function NavRune(props) {
-  const detailData = props.data[0];
-  let getRune = GetRuneData(JSON.parse(detailData.rune), runeApiData, props.ver);
+  const detailData = props.ver === 1 ? props.data.detail_rune_1 : props.data.detail_rune_2;
+  let getRune = GetRuneData(detailData, runeApiData, props.ver);
   let selected = props.selected;
 
   return (
@@ -124,23 +124,22 @@ function RuneRateDiv(props){
 }
 
 function DetailRuneFirstBox(props) {
-  const detailData = props.data[0];
-  let getRune = GetRuneData(JSON.parse(detailData.rune), runeApiData, props.ver);
+  const detailData =  props.ver === 1 ? props.data.detail_rune_1 : props.data.detail_rune_2;
+  let getRune = GetRuneData(detailData, runeApiData);
   let selected = "true"
   let runeIdList = [];
   let line1List = [];
   let line2List = [];
   let line3List = [];
 
-  const ver = props.ver === '1' ? JSON.parse(detailData.rune).version1 : JSON.parse(detailData.rune).version2
-
+  const ver = props.ver === 1 ? props.data.detail_rune_1 : props.data.detail_rune_2;
   for(let i = 0; i < runeApiData.length; i++){
     if(runeApiData[i].id.toString() === ver.mainTitle){
+      
       let slots = runeApiData[i].slots;
 
       for(let j = 0; j < slots.length; j++){
         let slotsRunes = slots[j].runes;
-        
         for(let k = 0; k < slotsRunes.length; k++){
           let runeId = slotsRunes[k].id.toString();
           let icon = basicRuneImgUrl + slotsRunes[k].icon
@@ -201,15 +200,15 @@ function DetailRuneFirstBox(props) {
 }
 
 function DetailRuneSecondBox(props) {
-  const detailData = props.data[0];
-  let getRune = GetRuneData(JSON.parse(detailData.rune), runeApiData, props.ver);
+  const detailData =  props.ver === 1 ? props.data.detail_rune_1 : props.data.detail_rune_2;
+  let getRune = GetRuneData(detailData, runeApiData);
   let selected = "true"
 
   let line1List = [];
   let line2List = [];
   let line3List = [];
 
-  const ver = props.ver === '1' ? JSON.parse(detailData.rune).version1 : JSON.parse(detailData.rune).version2
+  const ver = props.ver === 1 ? props.data.detail_rune_1 : props.data.detail_rune_2;
   for(let i = 0; i < runeApiData.length; i++){
     if(runeApiData[i].id.toString() === ver.subTitle){
       let slots = runeApiData[i].slots;
@@ -284,7 +283,7 @@ function PerkImg(id) {
 
 function DetailRuneThirdBox(props) {
   const detailData = props.data[0];
-  const statsData = props.ver === '1' ? JSON.parse(detailData.rune).version1.stats : JSON.parse(detailData.rune).version2.stats
+  // const statsData = props.ver === 1 ? props.data.detail_rune_1 : props.data.detail_rune_2;
 
   function Perk(img1, img2, img3, id) {
     let imgData = [];
@@ -303,9 +302,9 @@ function DetailRuneThirdBox(props) {
     return dataList;
   }
 
-  const perk1 = Perk(PerkImg(5008), PerkImg(5005), PerkImg(5007), statsData.line1);
-  const perk2 = Perk(PerkImg(5008), PerkImg(5002), PerkImg(5003), statsData.line2);
-  const perk3 = Perk(PerkImg(5001), PerkImg(5002), PerkImg(5003), statsData.line3);
+  const perk1 = Perk(PerkImg(5008), PerkImg(5005), PerkImg(5007), '5008');
+  const perk2 = Perk(PerkImg(5008), PerkImg(5009), PerkImg(5011), '5008');
+  const perk3 = Perk(PerkImg(5001), PerkImg(5010), PerkImg(5011), '5011');
 
   return (
     <>
@@ -324,15 +323,16 @@ function DetailRuneThirdBox(props) {
 
 // ♣ 스킬 ♣ -----------------------------------------
 function Skill(props) {
-  const detailData = props[0];
-  const skillMaster = JSON.parse(detailData.master);
-  const skillSeq = JSON.parse(detailData.skillSeq).skillSeqList;
+  const detailData = props  ;
+  const skillMaster = detailData.detail_skill_master;
+  const skillSeq = detailData.detail_skill_build.skillSeqList;
   // 스킬 마스터리
   const arrow = '/assets/images/arrow-icon-24.svg';
   // const arrowImg = <styled.SkillImgStyle $size="32px" src={arrow} />
   let masterList = [];
 
-  function master(key, src) {
+  function master(id, key) {
+    let src = "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/spell/" + id + key + ".png";
     let size = "32px";
     let data = (
       <styled.SkillBoxStyle key={key} $size={size}>
@@ -343,11 +343,11 @@ function Skill(props) {
     return data;
   }
 
-  masterList.push(master(skillMaster.masterA.key, skillMaster.masterA.src));
+  masterList.push(master(detailData.detail_champ_id, skillMaster.masterA.key));
   masterList.push(<styled.SkillImgStyle key={0} $size="32px" src={arrow} />);
-  masterList.push(master(skillMaster.masterB.key, skillMaster.masterB.src));
+  masterList.push(master(detailData.detail_champ_id, skillMaster.masterB.key));
   masterList.push(<styled.SkillImgStyle key={1} $size="32px" src={arrow} />);
-  masterList.push(master(skillMaster.masterC.key, skillMaster.masterC.src));
+  masterList.push(master(detailData.detail_champ_id, skillMaster.masterC.key));
   
 
   // 스킬 순서
@@ -417,24 +417,24 @@ function ArticleLeftBox(props) {
     return {
       ver: "1",
       selected: "true",
-      data: props.data,
+      data: props.champ,
     };
-  }, [props.data]);
+  }, [props.champ]);
 
   let v2Props = useMemo(() => {
     return {
       ver: "2",
       selected: "false",
-      data: props.data,
+      data: props.champ,
     };
-  }, [props.data]);
+  }, [props.champ]);
 
   let detailProps = useMemo(() => {
     return {
       ver: "1",
-      data: props.data,
+      data: props.champ,
     }
-  }, [props.data])
+  }, [props.champ])
 
   useEffect(() => {
     setNavRuneV1(NavRune(v1Props));
@@ -444,8 +444,8 @@ function ArticleLeftBox(props) {
     setDetailRuneSecond(DetailRuneSecondBox(detailProps));
     setDetailRuneThird(DetailRuneThirdBox(detailProps));
 
-    setSkill(Skill(props.data));
-  }, [v1Props, v2Props, detailProps, props.data])
+    setSkill(Skill(props.champ));
+  }, [v1Props, v2Props, detailProps, props.champ])
 
   function ClickEvent() {
     if(detailProps.ver === "1") {
@@ -505,7 +505,8 @@ function ArticleLeftBox(props) {
 }
 
 function ArticleRightBox(props) {
-  const detailData = props.data;
+  // 수정 필요
+  const detailData = props;
   return (
     <styled.ArticleBoxStyle $width="30%">
       <ItemDivTitle data={detailData} fav="spell" />
@@ -556,7 +557,14 @@ function ItemDivTitle(props) {
 }
 
 function ItemDivData(props) {
-  const detailData = props.data ? props.data[0] : null;
+  const champRawData = props.data;
+  let detailData;
+
+  if (!props.data) {
+    return <div>Loading...</div>;
+  }
+  detailData = champRawData.champ;
+
   let fav;
   let ver1;
   let ver2;
@@ -592,21 +600,21 @@ function ItemDivData(props) {
 
   switch (props.fav){
     case 'spell' :
-      fav = JSON.parse(detailData.spell);
+      fav = detailData.detail_spell;
       ver1 = fav.version1;
       ver2 = fav.version2;
       dataVer1 =getTag(imgData(ver1), ver1);
       dataVer2 =getTag(imgData(ver2), ver2);
       break;
     case 'start' :
-      fav = JSON.parse(detailData.startItem);
+      fav = detailData.detail_start;
       ver1 = fav.version1;
       ver2 = fav.version2;
       dataVer1 =getTag(imgData(ver1), ver1);
       dataVer2 =getTag(imgData(ver2), ver2);
       break;
     case 'shoes' :
-      fav = JSON.parse(detailData.shoes);
+      fav = detailData.detail_shoes;
       ver1 = fav.version1;
       ver2 = fav.version2;
       let data1 = (<>
@@ -637,13 +645,24 @@ function ItemDivData(props) {
 
 // detailsMain.js에 뱉어내는 
 export default function SecondArticle(props) {
-  const detailData = props.data;
+  const champRawData = props.champ;
+  let champData;
 
+  if (!props.champ) {
+    return <div>Loading...</div>;
+  }
+
+  if (Array.isArray(champRawData) && champRawData.length > 0) {
+    champData = champRawData[0].fields;
+  } else {
+    console.error("champRawData is not a valid array or is empty");
+    return <div>Error: Invalid champ data</div>;
+  }
   return (
     <>
       <styled.OutBoxStyle $height="500px">
-        <ArticleLeftBox data={detailData} />
-        <ArticleRightBox data={detailData} />
+        <ArticleLeftBox champ={champData} />
+        <ArticleRightBox champ={champData} />
       </styled.OutBoxStyle>
     </>
   );

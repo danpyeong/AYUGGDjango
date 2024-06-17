@@ -1,32 +1,3 @@
-export async function postRanking(tier, line, ver){
-  const response = await fetch('http://localhost:8100/park/getdata/po',{
-      method: "POST",
-      headers: {
-          "Content-Type": "application/json",
-          'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-          info: {
-              tier: tier,
-              line: line,
-              ver: ver,
-          }
-      }),
-  }).catch(error=>console.log('fetch에러사항:',error));
-  const data = await response.json();
-  return await data;
-}
-
-export async function ChampionDetailDataApi() {
-  const dataUrl = "http://localhost:8100/park/getData2";
-
-  const response = await fetch(dataUrl);
-  const resJson = await response.json();
-  
-  return resJson[0];
-}
-
-
 export async function postChampionDetailDataApi(champId){
     const response = await fetch('http://localhost:8100/park/getdata2/po',{
         method: "POST",
@@ -53,7 +24,7 @@ export const VersionDataApi = async () => {
 export async function RuneApi() {
   const ver = await VersionDataApi();
 
-  const runeUrl = "https://ddragon.leagueoflegends.com/cdn/" + ver + "/data/ko_KR/runesReforged.json";
+  const runeUrl = "https://ddragon.leagueoflegends.com/cdn/" + "14.11.1" + "/data/ko_KR/runesReforged.json";
   const response = await fetch(runeUrl);
   const resJson = await response.json();
 
@@ -82,6 +53,22 @@ export async function ChampionDataApi() {
   }
 }
 
+export async function getChampionBasicDataApi(champId) {
+  const response = await fetch('http://127.0.0.1:8000/champdata/championBasic/',{
+    method: "POST",
+    credentials: 'include',
+    headers: {
+        "Content-Type": "application/json",
+        'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+        info: { id : champId }
+    }),
+  }).catch(error=>console.log('fetch에러사항: ',error));
+  const data = await response.json();
+  return await data;
+}
+
 export async function getChampionRanking(tier, line, ver) {
   const dataUrl = "http://127.0.0.1:8000/champdata/championStatics/";
   const response = await fetch(dataUrl,{
@@ -99,6 +86,22 @@ export async function getChampionRanking(tier, line, ver) {
           }
       }),
   }).catch(error=>console.log('fetch에러사항:',error));
+  const data = await response.json();
+  return await data;
+}
+
+export async function getChampionDetailDataApi(champId){
+  const response = await fetch('http://127.0.0.1:8000/champdata/detail/',{
+    method: "POST",
+    credentials: 'include',
+    headers: {
+        "Content-Type": "application/json",
+        'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+        info: { id : champId }
+    }),
+  }).catch(error=>console.log('fetch에러사항: ',error));
   const data = await response.json();
   return await data;
 }

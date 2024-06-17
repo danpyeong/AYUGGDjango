@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
-from .models import MatchInfoData, Version, Champion, MatchData, StaticsChampionMiddleData
+from .models import Version, Champion, ChampionBasicInfo, StaticsChampionMiddleData, ChampionDetails
 from django.db.models import Q
 import json
 from django.core.serializers import serialize
@@ -17,7 +17,33 @@ def champion_list(request):
         champions = Champion.objects.all().order_by('champion_name')
         data = list(champions.values('champion_key', 'champion_name', 'champion_img', 'champion_version', 'champion_id'))
         return JsonResponse(data, safe=False)
-
+    
+def champion_basic_info(request):
+    if request.method == 'GET':
+        champions = ChampionBasicInfo.objects.all()
+        data = list(champions.values('champ_id', 'champ_name', 'champ_img', 'champ_version_id'))
+        return JsonResponse(data, safe=False)
+    
+    if request.method == 'POST':
+        try:
+            body_unicode = request.body.decode('utf-8')
+            body_data = json.loads(body_unicode)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+        
+        id = body_data['info']['id']
+        
+        conditions = Q(champ_id=str(id))
+        
+        filter_data = ChampionBasicInfo.objects.filter(conditions)
+        serialized_data = serialize('json', filter_data)
+        
+        print(f'BasicId: {id}')
+        
+        return JsonResponse(serialized_data, safe=False)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+    
 @csrf_exempt   
 def champion_statics(request):
     if request.method == 'GET':
@@ -45,6 +71,33 @@ def champion_statics(request):
         serialized_data = serialize('json', filter_data)
         
         print(f'Tier: {tier}, Line: {line}, Ver: {ver}')
+        
+        return JsonResponse(serialized_data, safe=False)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+    
+@csrf_exempt   
+def champion_details(request):
+    if request.method == 'GET':
+        get_data = ChampionDetails.objects.all()
+        serialized_data = serialize('json', get_data)
+        return JsonResponse(serialized_data, safe=False)
+    
+    if request.method == 'POST':
+        try:
+            body_unicode = request.body.decode('utf-8')
+            body_data = json.loads(body_unicode)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+        
+        id = body_data['info']['id']
+        
+        conditions = Q(detail_champ_id=str(id))
+        
+        filter_data = ChampionDetails.objects.filter(conditions)
+        serialized_data = serialize('json', filter_data)
+        
+        print(f'id: {id}')
         
         return JsonResponse(serialized_data, safe=False)
     else:

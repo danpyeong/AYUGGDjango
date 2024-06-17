@@ -2,8 +2,8 @@ import * as styled from "./detailsStyle";
 
 function ItemBox(props) {
   const detailData = props.data;
-  const itemTreeData = JSON.parse(detailData.itemTree);
-  const legendItemData = JSON.parse(detailData.legendItem);
+  const itemTreeData = detailData.detail_item_build;
+  const legendItemData = detailData.detail_use_legend;
   const arrow = '/assets/images/arrow-icon-24.svg';
   let itemTree;
   let legendItem;
@@ -32,10 +32,14 @@ function ItemBox(props) {
   }
 
   function getImg(key, src, mythic) {
-    return (<styled.ItemImgStyle key={key} src={src} $mythic={mythic} />)
+    var splitSrc_1 = src.split('/');
+    var splitSrc_2 = splitSrc_1[7].split('.');
+    var item = splitSrc_2[0];
+    var itemSrc = "https://ddragon.leagueoflegends.com/cdn/14.11.1/img/item/" + item + ".png";
+    return (<styled.ItemImgStyle key={key} src={itemSrc} $mythic={mythic} />)
   }
 
-  treeList.push(getImg(treeList.length, itemTree.mythic, "true"));
+  treeList.push(getImg(treeList.length, itemTree.mythic, "false"));
   treeList.push(<styled.SkillImgStyle key={treeList.length}  $size="32px" src={arrow}/>);
   treeList.push(getImg(treeList.length, itemTree.legend1, "false"));
   treeList.push(<styled.SkillImgStyle key={treeList.length}  $size="32px" src={arrow}/>);
@@ -78,8 +82,19 @@ function ItemWrappingBox(props) {
 
 // detailsMain.js에 뱉어내는
 export default function ThirdArticle(props) {
-  const detailData = props.data[0];
+  if (!props.champ) {
+    return <div>Loading...</div>;
+  }
+  const champRawData = props.champ;
+  
+  let champData;
 
+  if (Array.isArray(champRawData) && champRawData.length > 0) {
+    champData = champRawData[0].fields;
+  } else {
+    console.error("champRawData is not a valid array or is empty");
+    return <div>Error: Invalid champ data</div>;
+  }
 
   return (
     <>
@@ -99,7 +114,7 @@ export default function ThirdArticle(props) {
             </styled.MiddleTitleWrappingBox>
           </styled.MiddleTitleBoxStyle>
         <styled.ItemArticleBoxStyle>
-          <ItemWrappingBox data={detailData} />
+          <ItemWrappingBox data={champData} />
         </styled.ItemArticleBoxStyle>
       </styled.OutBoxStyle>
     </>
